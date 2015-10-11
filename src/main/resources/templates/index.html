@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/css.css" th:href="@{/css/css.css}"/>
+</head>
+<body>
+
+<div th:each="faculty : ${faculties}" >
+    <p th:text="${faculty.name}"/>
+    <a th:href="${#httpServletRequest.requestURL.toString()}+${faculty.abbrev}">Go!</a>
+</div>
+
+<p th:if="${faculties.size()}==0">No faculties found.</p>
+
+</body>
+</html>

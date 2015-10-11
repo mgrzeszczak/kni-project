@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/css.css" th:href="@{/css/css.css}"/>
+</head>
+<body>
+
+<div th:each="semester : ${semesters}" >
+    <p th:text="'Semester '+${semester.number}"/>
+    <a th:href="${#httpServletRequest.requestURL.toString()}+'/sem/'+${semester.number}">Go!</a>
+</div>
+
+</body>
+</html>

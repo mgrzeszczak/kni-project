@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/css.css" th:href="@{/css/css.css}"/>
+</head>
+<body>
+
+<div th:each="subject : ${subjects}" >
+    <p th:text="${subject.name}"/>
+    <p th:text="${subject.description}"/>
+    <a th:href="${#httpServletRequest.requestURL.toString()}+'/'+${subject.abbrev}">Go!</a>
+</div>
+
+</body>
+</html>
