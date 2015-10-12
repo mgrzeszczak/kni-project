@@ -15,7 +15,7 @@ import java.lang.annotation.Target;
 @Constraint(validatedBy = UniversityEmailValidator.class)
 public @interface UniversityEmail {
     String domain();
-    String mesage() default "Only university e-mail addresses accepted.";
+    String message() default "Only university e-mail addresses accepted.";
     Class<?>[] groups() default{};
     Class<? extends Payload>[] payload() default{};
 }

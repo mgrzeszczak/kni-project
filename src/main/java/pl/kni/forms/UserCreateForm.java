@@ -2,6 +2,7 @@ package pl.kni.forms;
 
 
 import org.hibernate.validator.constraints.Email;
+import org.hibernate.validator.constraints.Length;
 import org.hibernate.validator.constraints.NotEmpty;
 import pl.kni.security.Role;
 import pl.kni.validation.Available;
@@ -17,8 +18,10 @@ public class UserCreateForm {
     @Email
     @Available(type = Available.Field.EMAIL)
     @UniversityEmail(domain = "pw.edu.pl")
+    @NotEmpty
     private String email;
     @NotEmpty
+    @Length(min = 6)
     private String password;
     @NotEmpty
     private String passwordRepeated;

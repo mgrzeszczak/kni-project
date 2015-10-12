@@ -13,12 +13,9 @@ import pl.kni.security.CurrentUser;
  */
 @Service
 public class CurrentUserDetailsService implements UserDetailsService {
-    private final UserService userService;
 
     @Autowired
-    public CurrentUserDetailsService(UserService userService) {
-        this.userService = userService;
-    }
+    private UserService userService;
 
     @Override
     public CurrentUser loadUserByUsername(String email) throws UsernameNotFoundException {

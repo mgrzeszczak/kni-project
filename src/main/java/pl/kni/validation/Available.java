@@ -18,7 +18,7 @@ public @interface Available {
         EMAIL
     }
     Field type();
-    String mesage() default "Not available.";
+    String message() default "Not available.";
     Class<?>[] groups() default{};
     Class<? extends Payload>[] payload() default{};
 }

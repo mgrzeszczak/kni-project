@@ -1,6 +1,7 @@
 package pl.kni.models;
 
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.kni.forms.UserCreateForm;
 import pl.kni.security.Role;
 
@@ -29,7 +30,7 @@ public class User {
 
     public User(UserCreateForm form) {
         email = form.getEmail();
-        password = form.getPassword();
+        password = new BCryptPasswordEncoder().encode(form.getPassword());
         role = form.getRole();
     }
 

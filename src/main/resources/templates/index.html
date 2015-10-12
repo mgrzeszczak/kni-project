@@ -12,5 +12,15 @@
 
 <p th:if="${faculties.size()}==0">No faculties found.</p>
 
+<a th:if="${currentUser==null}" th:href="@{/login}">Login</a>
+
+<form th:if="${currentUser!=null}" role="form" th:action="@{/logout}" method="post">
+    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+    <button type="submit">Log out</button>
+</form>
+
+<p th:if="${currentUser!=null and currentUser.getRole()==admin}">You're an admin!</p>
+<p th:if="${currentUser!=null and currentUser.getRole()!=admin}">You're just a simple user!</p>
+
 </body>
 </html>
