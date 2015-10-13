@@ -8,6 +8,11 @@
 <div th:each="faculty : ${faculties}" >
     <p th:text="${faculty.name}"/>
     <a th:href="${#httpServletRequest.requestURL.toString()}+${faculty.abbrev}">Go!</a>
+    <form th:if="${currentUser!=null and currentUser.getRole()==admin}" role="form" th:action="@{/admin/faculty/remove}" method="post">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+        <input type="hidden" th:name="id" th:value="${faculty.id}"/>
+        <button type="submit">Delete</button>
+    </form>
 </div>
 
 <p th:if="${faculties.size()}==0">No faculties found.</p>
@@ -18,6 +23,28 @@
     <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
     <button type="submit">Log out</button>
 </form>
+
+
+<p th:if="${currentUser}" th:text="${currentUser.getRole().toString()}"></p>
+
+<div th:if="${currentUser!=null and currentUser.getRole()==admin}">
+    <form th:action="@{/faculty/create}" method="post" th:object="${facultyCreateForm}">
+        <fieldset>
+            <legend>Create faculty</legend>
+            <div>
+                <label for="name">Name:</label>
+                <input type="name" name="name" id="name" required="true" autofocus="true"/>
+                <span th:if="${#fields.hasErrors('abbrev')}"></span>
+            </div>
+            <div>
+                <label for="abbrev">Abbreviation:</label>
+                <input type="abbrev" name="abbrev" id="abbrev" required="true"/>
+                <span th:if="${#fields.hasErrors('abbrev')}"></span>
+            </div>
+            <button type="submit">Create</button>
+        </fieldset>
+    </form>
+</div>
 
 <p th:if="${currentUser!=null and currentUser.getRole()==admin}">You're an admin!</p>
 <p th:if="${currentUser!=null and currentUser.getRole()!=admin}">You're just a simple user!</p>

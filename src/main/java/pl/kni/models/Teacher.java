@@ -1,6 +1,7 @@
 package pl.kni.models;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * Created by Maciej on 11.10.2015.
@@ -15,8 +16,8 @@ public class Teacher {
     private String lastName;
     private String description;
 
-    @ManyToOne
-    private Subject subject;
+    @ManyToMany
+    private List<Subject> subjects;
 
     public Teacher() {
 
@@ -30,12 +31,12 @@ public class Teacher {
         this.id = id;
     }
 
-    public Subject getSubject() {
-        return subject;
+    public List<Subject> getSubjects() {
+        return subjects;
     }
 
-    public void setSubject(Subject subject) {
-        this.subject = subject;
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
     }
 
     public String getFirstName() {

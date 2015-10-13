@@ -17,7 +17,7 @@ public class Subject {
     @ManyToOne()
     private Semester semester;
 
-    @OneToMany(mappedBy = "subject")
+    @ManyToMany(mappedBy = "subjects")
     private List<Teacher> teachers;
     @OneToMany(mappedBy = "subject",cascade = CascadeType.REMOVE)
     private List<Opinion> opinions;

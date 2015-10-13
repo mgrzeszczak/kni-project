@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/css.css" th:href="@{/css/css.css}"/>
+</head>
+<body>
+
+
+<div th:if="${currentUser!=null and currentUser.getRole()==admin}">
+    <form th:action="@{/admin/faculty/create}" method="post" th:object="${facultyCreateForm}">
+        <fieldset>
+            <legend>Create faculty</legend>
+            <div>
+                <label for="name">Name:</label>
+                <input type="name" name="name" id="name" required="true" autofocus="true"/>
+                <span th:if="${#fields.hasErrors('name')}"></span>
+            </div>
+            <div>
+                <label for="abbrev">Abbreviation:</label>
+                <input type="abbrev" name="abbrev" id="abbrev" required="true"/>
+                <span th:if="${#fields.hasErrors('abbrev')}"></span>
+            </div>
+            <button type="submit">Create</button>
+        </fieldset>
+    </form>
+</div>
+
+</body>
+</html>

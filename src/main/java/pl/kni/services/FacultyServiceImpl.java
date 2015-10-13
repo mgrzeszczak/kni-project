@@ -3,6 +3,7 @@ package pl.kni.services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kni.exceptions.FacultyNotFoundException;
+import pl.kni.forms.FacultyCreateForm;
 import pl.kni.models.Faculty;
 import pl.kni.models.Major;
 import pl.kni.repositories.FacultyRepository;
@@ -20,7 +21,6 @@ public class FacultyServiceImpl implements FacultyService {
     @Autowired
     private FacultyRepository facultyRepository;
 
-
     @Override
     public List<Faculty> all() {
         return (List<Faculty>)facultyRepository.findAll();
@@ -31,5 +31,20 @@ public class FacultyServiceImpl implements FacultyService {
         Faculty faculty = facultyRepository.findByAbbrev(abbrev);
         if (faculty==null) throw new FacultyNotFoundException();
         return faculty.getMajors();
+    }
+
+    @Override
+    public Faculty create(FacultyCreateForm facultyCreateForm) {
+        Faculty faculty = new Faculty();
+        faculty.setAbbrev(facultyCreateForm.getAbbrev());
+        faculty.setName(facultyCreateForm.getName());
+        return facultyRepository.save(faculty);
+    }
+
+    @Override
+    public void remove(long id) throws FacultyNotFoundException {
+        Faculty faculty = facultyRepository.findOne(id);
+        if(faculty==null) throw new FacultyNotFoundException();
+        facultyRepository.delete(faculty);
     }
 }
