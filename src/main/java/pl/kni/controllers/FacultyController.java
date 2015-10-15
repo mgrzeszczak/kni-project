@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import pl.kni.exceptions.FacultyNotFoundException;
+import pl.kni.forms.MajorCreateForm;
 import pl.kni.models.Faculty;
 import pl.kni.services.FacultyService;
 
@@ -20,9 +21,10 @@ public class FacultyController {
     private FacultyService facultyService;
 
     @RequestMapping(value = "/{faculty}",method = RequestMethod.GET)
-    public String faculty(@PathVariable String faculty, Model model){
+    public String faculty(@PathVariable String faculty, Model model, MajorCreateForm majorCreateForm){
         try {
             model.addAttribute("majors",facultyService.getMajors(faculty));
+            model.addAttribute("facultyId",facultyService.getFacultyIdByAbbrev(faculty));
         } catch (FacultyNotFoundException e) {
             // TODO: handle exception by returning error page
             model.addAttribute("error","This faculty doesn't exist.");

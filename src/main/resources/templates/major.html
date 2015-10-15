@@ -10,5 +10,12 @@
     <a th:href="${#httpServletRequest.requestURL.toString()}+'/sem/'+${semester.number}">Go!</a>
 </div>
 
+<div th:if="${currentUser!=null and currentUser.getRole()==admin}">
+    <form th:action="@{/admin/semester/create}" method="post">
+        <input type="hidden" name="majorId" id="majorId" th:value="${majorId}"/>
+        <button type="submit">Add semester</button>
+    </form>
+</div>
+
 </body>
 </html>

@@ -1,5 +1,7 @@
 package pl.kni.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,7 +17,9 @@ public class Major {
     private long id;
 
     @ManyToOne()
+    @JsonIgnore
     private Faculty faculty;
+    @JsonIgnore
     @OneToMany(mappedBy = "major", cascade = CascadeType.REMOVE)
     private List<Semester> semesters;
     private String name;

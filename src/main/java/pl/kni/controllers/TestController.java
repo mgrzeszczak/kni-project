@@ -19,13 +19,9 @@ public class TestController {
     @Autowired
     private UserRepository userRepository;
 
-    @RequestMapping("/admin")
+    @RequestMapping("/rest")
     @ResponseBody
-    public User admin(){
-        User admin = new User();
-        admin.setRole(Role.ADMIN);
-        admin.setPassword(new BCryptPasswordEncoder().encode("admin"));
-        admin.setEmail("admin@pw.edu.pl");
-        return userRepository.save(admin);
+    public String admin(){
+        return "test";
     }
 }

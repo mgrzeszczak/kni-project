@@ -11,6 +11,7 @@ import pl.kni.models.Faculty;
 import pl.kni.models.Major;
 import pl.kni.repositories.FacultyRepository;
 import pl.kni.services.MajorService;
+import pl.kni.services.SemesterService;
 
 import java.util.List;
 
@@ -29,6 +30,7 @@ public class MajorController {
                         Model model){
         try {
             model.addAttribute("semesters",majorService.getSemesters(faculty,major));
+            model.addAttribute("majorId",majorService.getMajorId(faculty,major));
         } catch (MajorNotFoundException e) {
             // TODO: handle exception by returning error page;
             model.addAttribute("error","This major doesn't exist.");
@@ -36,4 +38,8 @@ public class MajorController {
         }
         return "major";
     }
+
+
+
+
 }

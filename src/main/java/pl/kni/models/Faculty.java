@@ -13,7 +13,9 @@ public class Faculty {
     @Id
     @GeneratedValue
     private long id;
+    @Column(unique = true)
     private String name;
+    @Column(unique = true)
     private String abbrev;
     @OneToMany(mappedBy = "faculty",cascade = CascadeType.REMOVE)
     private List<Major> majors;

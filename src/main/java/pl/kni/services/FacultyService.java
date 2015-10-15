@@ -18,4 +18,8 @@ public interface FacultyService {
     List<Major> getMajors(String abbrev) throws FacultyNotFoundException;
     Faculty create(FacultyCreateForm facultyCreateForm);
     void remove(long id) throws FacultyNotFoundException;
+    long getFacultyIdByAbbrev(String abbrev) throws FacultyNotFoundException;
+    Faculty findByAbbrev(String abbrev) throws FacultyNotFoundException;
+    Faculty findByName(String name) throws FacultyNotFoundException;
+    Faculty findById(long id) throws FacultyNotFoundException;
 }

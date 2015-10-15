@@ -28,7 +28,7 @@ public class UserController {
     @Autowired
     private UserCreateFormValidator userCreateFormValidator;
 
-    @InitBinder()
+    @InitBinder(value = "userCreateForm")
     public void initBinder(WebDataBinder binder){
         binder.addValidators(userCreateFormValidator);
     }
@@ -39,7 +39,7 @@ public class UserController {
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
-    public String register(@Valid UserCreateForm userCreateForm, BindingResult result, Model model){
+    public String register(@Valid @ModelAttribute("userCreateForm") UserCreateForm userCreateForm, BindingResult result, Model model){
         if (result.hasErrors()) {
             return "register";
         }

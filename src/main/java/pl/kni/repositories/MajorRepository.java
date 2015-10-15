@@ -11,5 +11,7 @@ public interface MajorRepository extends CrudRepository<Major,Long> {
 
     @Query("select m from Major m where m.abbrev=?2 and m.faculty.abbrev=?1")
     Major findByFacultyAndMajorAbbrevs(String faculty, String major);
+    @Query("select m from Major m where m.name=?1 and m.faculty.id=?2")
+    Major findByNameAndFacultyId(String name,long id);
 
 }

@@ -47,4 +47,32 @@ public class FacultyServiceImpl implements FacultyService {
         if(faculty==null) throw new FacultyNotFoundException();
         facultyRepository.delete(faculty);
     }
+
+    @Override
+    public long getFacultyIdByAbbrev(String abbrev) throws FacultyNotFoundException {
+        Faculty faculty = facultyRepository.findByAbbrev(abbrev);
+        if(faculty==null) throw new FacultyNotFoundException();
+        return faculty.getId();
+    }
+
+    @Override
+    public Faculty findByAbbrev(String abbrev) throws FacultyNotFoundException {
+        Faculty faculty = facultyRepository.findByAbbrev(abbrev);
+        if(faculty==null) throw new FacultyNotFoundException();
+        return faculty;
+    }
+
+    @Override
+    public Faculty findByName(String name) throws FacultyNotFoundException {
+        Faculty faculty = facultyRepository.findByName(name);
+        if (faculty==null) throw new FacultyNotFoundException();
+        return faculty;
+    }
+
+    @Override
+    public Faculty findById(long id) throws FacultyNotFoundException {
+        Faculty faculty = facultyRepository.findOne(id);
+        if (faculty==null) throw new FacultyNotFoundException();
+        return faculty;
+    }
 }

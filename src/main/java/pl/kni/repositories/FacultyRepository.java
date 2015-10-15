@@ -9,5 +9,5 @@ import pl.kni.models.Faculty;
 public interface FacultyRepository extends CrudRepository<Faculty,Long> {
 
     Faculty findByAbbrev(String abbrev);
-
+    Faculty findByName(String name);
 }
