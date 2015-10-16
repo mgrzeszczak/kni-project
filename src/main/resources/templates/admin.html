@@ -1,8 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <link rel="stylesheet" type="text/css" href="/static/css/css.css" th:href="@{/css/css.css}"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/css.css}" />
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
     <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+
     <script>
         function async(id) {
             console.log(id);
@@ -27,6 +30,17 @@
                 /*]]>*/
             });
         }
+        function pullSubjects(id,view){
+            $.get("/kni/admin/subjects/list",{semesterId:id}, function (data) {
+                /*<![CDATA[*/
+                view.empty();
+                for (i = 0; i<data.length; i++){
+                    var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+                    view.append(option);
+                }
+                /*]]>*/
+            });
+        }
         function pullSemesters(id,view){
             console.log('pulling');
             console.log(id);
@@ -39,26 +53,78 @@
                     view.append(option);
                 }
                 /*]]>*/
+                return data;
             });
         }
         function doublePull(id,view1,view2){
             $.get("/kni/admin/majors/list",{facultyId:id}, function (data) {
                 /*<![CDATA[*/
                 view1.empty();
+                view2.empty();
                 for (i = 0; i<data.length; i++){
                     var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
                     view1.append(option);
                 }
+
                 if (data.length>0)
-                pullSemesters(data[0].id,view2);
+                    console.log(pullSemesters(data[0].id,view2));
+
+
+                /*]]>*/
+            });
+        }
+        function pullSemestersAndSubjects(id,view1,view2){
+            $.get("/kni/admin/semesters/list",{majorId:id}, function (data) {
+                /*<![CDATA[*/
+                view1.empty();
+                for (i = 0; i<data.length; i++){
+                    var option = $('<option></option>').attr("value", data[i].id).text(data[i].number);
+                    view1.append(option);
+                }
+
+                if (data.length>0)
+                    pullSubjects(data[0].id,view2);
+
+
+                /*]]>*/
+            });
+        }
+        function triplePull(id,view1,view2,view3){
+
+            $.get("/kni/admin/majors/list",{facultyId:id}, function (data) {
+                /*<![CDATA[*/
+                view1.empty();
+                view2.empty();
+                view3.empty();
+                for (i = 0; i<data.length; i++){
+                    var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+                    view1.append(option);
+                }
+                if (data.length==0) return;
+                $.get("/kni/admin/semesters/list",{majorId:data[0].id}, function (data) {
+                    for (i = 0; i<data.length; i++){
+                        var option = $('<option></option>').attr("value", data[i].id).text(data[i].number);
+                        view2.append(option);
+                    }
+                    if (data.length ==0 )return;
+
+                    $.get("/kni/admin/subjects/list",{semesterId:data[0].id}, function (data) {
+                        for (i = 0; i<data.length; i++){
+                            var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+                            view3.append(option);
+                        }
+                    });
+                });
                 /*]]>*/
             });
         }
     </script>
 </head>
-<body>
+<body onload="$(document).ready(function() {
+            $('select').material_select();
+        });">
 
-<div th:if="${currentUser!=null and currentUser.getRole()==admin}">
+<div th:if="${currentUser!=null and currentUser.getRole()==admin}" class="mainBox">
     <!-- CREATE FACULTY -->
     <div>
         <form th:action="@{/admin/faculty/create}" method="post" th:object="${facultyCreateForm}">
@@ -74,7 +140,7 @@
                     <input type="text" th:field="*{abbrev}" required="true"/>
                     <span th:if="${#fields.hasErrors('abbrev')}" th:errors="*{abbrev}"></span>
                 </div>
-                <button type="submit">Create</button>
+                <button type="submit" >Create</button>
                 <span th:if="${param.facultyCreated}">Faculty created successfully.</span>
             </fieldset>
         </form>
@@ -87,7 +153,7 @@
                 <select name="id" required="true">
                     <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
                 </select>
-                <button type="submit">Delete</button>
+                <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
                 <span th:if="${param.facultyDeleteOk}">Faculty deleted successfully.</span>
                 <span th:if="${param.facultyDeleteError}">Failed to delete faculty.</span>
             </fieldset>
@@ -127,7 +193,7 @@
                 <select name="id" id="majorDeleteMajors" required="true">
                     <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
                 </select>
-                <button type="submit">Delete</button>
+                <button type="submit" onclick="return confirm('Are you sure?')">Delete</button>
                 <span th:if="${param.majorDeleteOk}">Major deleted successfully.</span>
                 <span th:if="${param.majorDeleteError}">Failed to delete major.</span>
             </fieldset>
@@ -164,65 +230,116 @@
         <form th:action="@{/admin/semester/remove}" method="post">
             <fieldset>
                 <legend>Remove semesters</legend>
-                <select required="true" onchange="doublePull(this.value, $('#semesterDeleteMajors'),$('semesterDeleteSemesters'))">
+                <select required="true" onchange="doublePull(this.value, $('#semesterDeleteMajors'),$('#semesterDeleteSemesters'));">
                     <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
                 </select>
                 <select id="semesterDeleteMajors" name="majorId" required="true" onchange="pullSemesters(this.value,$('#semesterDeleteSemesters'))">
                     <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
                 </select>
                 <select multiple="true" name="ids" required="true" id="semesterDeleteSemesters">
-                    <option th:if="${majors.size()!=0}" th:each="semester : ${majors.get(0).getSemesters()}" th:value="${semester.id}" th:text="${semester.number}"/>
+                    <option th:each="semester : ${semesters}" th:value="${semester.id}" th:text="${semester.number}"/>
                 </select>
-                <button type="submit">Remove</button>
+                <button type="submit" onclick="return confirm('Are you sure?')">Remove</button>
                 <span th:if="${param.semesterRemoveOk}">Semesters removed successfully.</span>
                 <span th:if="${param.semesterRemoveError}">Failed to remove semesters.</span>
             </fieldset>
         </form>
     </div>
-
-<!--
-<div th:if="${currentUser!=null and currentUser.getRole()==admin}">
-    <form th:action="@{/admin/major/create}" method="post" th:object="${majorCreateForm}">
-        <fieldset>
-            <legend>Add major</legend>
-            <div>
-                <label for="name">Name:</label>
-                <input type="name" name="name" id="name" required="true" autofocus="true"/>
-                <span th:if="${#fields.hasErrors('name')}"></span>
-            </div>
-            <div>
-                <select name="facultyId">
+    <!-- ADD SUBJECTS -->
+    <div>
+        <form th:action="@{/admin/subject/create}" method="post" th:object="${subjectCreateForm}">
+            <fieldset>
+                <legend>Create subject</legend>
+                <select required="true" onchange="doublePull(this.value, $('#subjectCreateMajors'),$('#subjectCreateSemesters'));">
                     <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
                 </select>
-            </div>
-            <button type="submit">Create</button>
-        </fieldset>
-    </form>
-</div>
-
-<div th:if="${currentUser!=null and currentUser.getRole()==admin}">
-    <form th:action="@{/admin/major/create}" method="post" th:object="${majorCreateForm}">
-        <fieldset>
-            <legend>Add major</legend>
-            <div>
-                <label for="name">Name:</label>
-                <input type="name" name="name" id="name" required="true" autofocus="true"/>
-                <span th:if="${#fields.hasErrors('name')}"></span>
-            </div>
-            <div>
-                <select id="faculties" name="facultyId" onChange="async(this.value);" required="true">
+                <select id="subjectCreateMajors" required="true" onchange="pullSemesters(this.value,$('#subjectCreateSemesters'))">
+                    <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
+                </select>
+                <select th:field="*{semesterId}" required="true" id="subjectCreateSemesters">
+                    <option th:each="semester : ${semesters}" th:value="${semester.id}" th:text="${semester.number}"/>
+                </select>
+                <div>
+                    <label>Name:</label>
+                    <input type="text" th:field="*{name}" required="true"/>
+                    <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}"></span>
+                </div>
+                <div>
+                    <label>Description:</label>
+                    <input type="text" th:field="*{description}" required="true"/>
+                    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+                </div>
+                <button type="submit">Create</button>
+                <span th:if="${param.subjectCreateOk}">Subject created successfully.</span>
+                <span th:if="${param.subjectCreateError}">Failed to create subject.</span>
+            </fieldset>
+        </form>
+    </div>
+    <!-- REMOVE SUBJECT -->
+    <div>
+        <form th:action="@{/admin/subject/remove}" method="post">
+            <fieldset>
+                <legend>Remove subject</legend>
+                <select required="true" onchange="triplePull(this.value, $('#subjectDeleteMajors'),$('#subjectDeleteSemesters'),$('#subjectDeleteSubjects'));">
                     <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
                 </select>
-            </div>
-            <div>
-                <select id="majors" name="majorId" required="true">
-                    <option th:each="major:${majors}" th:value="${major.id}" th:text="${major.name}"/>
+                <select id="subjectDeleteMajors" required="true" onchange="pullSemestersAndSubjects(this.value,$('#subjectDeleteSemesters'),$('#subjectDeleteSubjects'))">
+                    <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
                 </select>
-            </div>
-            <button type="submit">Create</button>
-        </fieldset>
-    </form>
-</div-->
+                <select required="true" id="subjectDeleteSemesters" onchange="pullSubjects(this.value, $('#subjectDeleteSubjects'));">
+                    <option th:each="semester : ${semesters}" th:value="${semester.id}" th:text="${semester.number}"/>
+                </select>
+                <select name="id" required="true" id="subjectDeleteSubjects">
+                    <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"/>
+                </select>
+                <button type="submit" onclick="return confirm('Are you sure?')">Remove</button>
+                <span th:if="${param.subjectRemoveOk}">Subject removed successfully.</span>
+                <span th:if="${param.subjectRemoveError}">Failed to remove subject.</span>
+            </fieldset>
+        </form>
+    </div>
+
+    <!-- CREATE TEACHER -->
+    <div>
+        <form th:action="@{/admin/teacher/create}" method="post" th:object="${teacherCreateForm}">
+            <fieldset>
+                <legend>Create teacher</legend>
+                <div>
+                    <label>First name:</label>
+                    <input type="text" th:field="*{firstName}" required="true"/>
+                    <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+                </div>
+                <div>
+                    <label>Last name:</label>
+                    <input type="text" th:field="*{lastName}" required="true"/>
+                    <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+                </div>
+                <div>
+                    <label>Description:</label>
+                    <input type="text" th:field="*{description}" required="true"/>
+                    <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
+                </div>
+                <button type="submit" >Create</button>
+                <span th:if="${param.teacherCreateOk}">Teacher created successfully.</span>
+            </fieldset>
+        </form>
+    </div>
+    <!-- REMOVE TEACHER -->
+    <div>
+        <form th:action="@{/admin/teacher/remove}" method="post">
+            <fieldset>
+                <legend>Remove teacher</legend>
+                <div>
+                   <select required="true" name="id">
+                       <option th:each="teacher : ${teachers}" th:value="${teacher.id}" th:text="${teacher.firstName+' '+teacher.lastName}"/>
+                   </select>
+                </div>
+                <button type="submit" onclick="return confirm('Are you sure?')">Remove</button>
+                <span th:if="${param.teacherRemoveOk}">Teacher removed successfully.</span>
+                <span th:if="${param.teacherRemoveError}">Failed to remove teacher.</span>
+            </fieldset>
+        </form>
+    </div>
 </div>
 </body>
 </html>

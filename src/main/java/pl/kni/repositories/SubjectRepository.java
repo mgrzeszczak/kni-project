@@ -10,4 +10,6 @@ import pl.kni.models.Subject;
  */
 public interface SubjectRepository extends CrudRepository<Subject,Long>{
 
+    @Query("select s from Subject s where s.name=?1 and s.semester.id=?2")
+    Subject findByNameAndSemesterId(String name, long id);
 }

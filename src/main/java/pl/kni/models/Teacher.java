@@ -1,6 +1,9 @@
 package pl.kni.models;
 
+import pl.kni.forms.TeacherCreateForm;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,6 +21,13 @@ public class Teacher {
 
     @ManyToMany
     private List<Subject> subjects;
+
+    public Teacher(TeacherCreateForm teacherCreateForm) {
+        this.firstName = teacherCreateForm.getFirstName();
+        this.lastName = teacherCreateForm.getLastName();
+        this.description = teacherCreateForm.getDescription();
+        this.subjects = new ArrayList<>();
+    }
 
     public Teacher() {
 

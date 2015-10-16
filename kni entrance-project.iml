@@ -77,6 +77,5 @@
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-core:3.2.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.security:spring-security-web:3.2.8.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework:spring-aop:4.1.7.RELEASE" level="project" />
-    <orderEntry type="library" name="Maven: com.allanditzel:spring-security-csrf-token-filter:1.1" level="project" />
   </component>
 </module>

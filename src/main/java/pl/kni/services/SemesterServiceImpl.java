@@ -69,4 +69,11 @@ public class SemesterServiceImpl implements SemesterService {
             semesterRepository.delete(id);
         }
     }
+
+    @Override
+    public Semester findById(long id) throws SemesterNotFoundException {
+        Semester semester = semesterRepository.findOne(id);
+        if (semester==null) throw new SemesterNotFoundException();
+        return semester;
+    }
 }

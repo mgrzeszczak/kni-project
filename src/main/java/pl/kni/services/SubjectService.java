@@ -12,5 +12,5 @@ public interface SubjectService {
 
     Subject create(SubjectCreateForm subjectCreateForm) throws SemesterNotFoundException;
     void remove(long id) throws SubjectNotFoundException;
-
+    Subject findByNameAndSemesterId(String name, long id) throws SubjectNotFoundException;
 }

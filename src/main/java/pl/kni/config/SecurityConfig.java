@@ -1,6 +1,5 @@
 package pl.kni.config;
 
-import com.allanditzel.springframework.security.web.csrf.CsrfTokenResponseHeaderBindingFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.security.SecurityProperties;
 import org.springframework.context.annotation.Configuration;
@@ -31,9 +30,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter{
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        CsrfTokenResponseHeaderBindingFilter csrfTokenFilter = new CsrfTokenResponseHeaderBindingFilter();
-        http.addFilterAfter(csrfTokenFilter, CsrfFilter.class);
-
         http
                 .authorizeRequests()
                 .antMatchers("/register", "/static/**").permitAll()

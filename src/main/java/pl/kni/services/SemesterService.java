@@ -17,4 +17,5 @@ public interface SemesterService {
     void remove(long id) throws SemesterNotFoundException;
     void create(long majorId,int amount) throws MajorNotFoundException;
     void remove(List<Long> ids);
+    Semester findById(long id) throws SemesterNotFoundException;
 }

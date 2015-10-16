@@ -7,24 +7,19 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
-import pl.kni.exceptions.FacultyNotFoundException;
-import pl.kni.exceptions.MajorNotFoundException;
-import pl.kni.exceptions.SemesterNotFoundException;
-import pl.kni.exceptions.SubjectNotFoundException;
+import pl.kni.exceptions.*;
 import pl.kni.forms.FacultyCreateForm;
 import pl.kni.forms.MajorCreateForm;
 import pl.kni.forms.SubjectCreateForm;
-import pl.kni.models.Faculty;
-import pl.kni.models.Major;
-import pl.kni.models.Semester;
+import pl.kni.forms.TeacherCreateForm;
+import pl.kni.models.*;
 import pl.kni.repositories.FacultyRepository;
 import pl.kni.security.Role;
-import pl.kni.services.FacultyService;
-import pl.kni.services.MajorService;
-import pl.kni.services.SemesterService;
-import pl.kni.services.SubjectService;
+import pl.kni.services.*;
 import pl.kni.validation.FacultyCreateFormValidator;
 import pl.kni.validation.MajorCreateFormValidator;
+import pl.kni.validation.SubjectCreateFormValidator;
+import pl.kni.validation.TeacherCreateFormValidator;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
@@ -44,23 +39,48 @@ public class AdminController {
     @Autowired
     private SemesterService semesterService;
     @Autowired
+    private SubjectService subjectService;
+    @Autowired
+    private TeacherService teacherService;
+    @Autowired
     private FacultyCreateFormValidator facultyCreateFormValidator;
     @Autowired
     private MajorCreateFormValidator majorCreateFormValidator;
+    @Autowired
+    private SubjectCreateFormValidator subjectCreateFormValidator;
+    @Autowired
+    private TeacherCreateFormValidator teacherCreateFormValidator;
 
     @ModelAttribute("faculties")
     public List<Faculty> getFaculties(){
-        List<Faculty> faculties = facultyService.all();
-        return faculties;
+        return facultyService.all();
     }
     @ModelAttribute("majors")
     public List<Major> getMajors(){
         List<Faculty> faculties = facultyService.all();
         return faculties.size() != 0 ? faculties.get(0).getMajors() : new ArrayList<Major>();
     }
+    @ModelAttribute("semesters")
+    public List<Semester> getSemesters(){
+        List<Major> majors = getMajors();
+        return majors.size()==0? new ArrayList<>() : majors.get(0).getSemesters();
+    }
+    @ModelAttribute("subjects")
+    public List<Subject> getSubjects(){
+        List<Semester> list = getSemesters();
+        if (list.size()==0) return new ArrayList<>();
+        return list.get(0).getSubjects();
+    }
+    @ModelAttribute("teachers")
+    public List<Teacher> getTeachers(){
+        return teacherService.all();
+    }
 
     @RequestMapping(value = "",method = RequestMethod.GET)
-    public String addFaculty(FacultyCreateForm facultyCreateForm, MajorCreateForm majorCreateForm){
+    public String addFaculty(FacultyCreateForm facultyCreateForm,
+                             MajorCreateForm majorCreateForm,
+                             SubjectCreateForm subjectCreateForm,
+                             TeacherCreateForm teacherCreateForm){
         return "admin";
     }
 
@@ -72,10 +92,21 @@ public class AdminController {
     public void initMajorBinder(WebDataBinder binder){
         binder.addValidators(majorCreateFormValidator);
     }
+    @InitBinder(value = "subjectCreateForm")
+    public void initSubjectBinder(WebDataBinder binder){
+        binder.addValidators(subjectCreateFormValidator);
+    }
+    @InitBinder(value = "teacherCreateForm")
+    public void initTeacherBinder(WebDataBinder binder){
+        binder.addValidators(teacherCreateFormValidator);
+    }
 
     @RequestMapping(value = "/faculty/create",method = RequestMethod.POST)
     public String addFaculty(@Valid @ModelAttribute("facultyCreateForm") FacultyCreateForm facultyCreateForm,
-                             BindingResult result, MajorCreateForm majorCreateForm){
+                             BindingResult result,
+                             MajorCreateForm majorCreateForm,
+                             SubjectCreateForm subjectCreateForm,
+                             TeacherCreateForm teacherCreateForm){
         if (result.hasErrors()){
             return "admin";
         }
@@ -94,7 +125,11 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/major/create",method = RequestMethod.POST)
-    public String addMajor(@Valid @ModelAttribute("majorCreateForm")MajorCreateForm majorCreateForm, BindingResult result, FacultyCreateForm form){
+    public String addMajor(@Valid @ModelAttribute("majorCreateForm")MajorCreateForm majorCreateForm,
+                           BindingResult result,
+                           FacultyCreateForm form,
+                           SubjectCreateForm subjectCreateForm,
+                           TeacherCreateForm teacherCreateForm){
         if (result.hasErrors()){
             return "admin";
         }
@@ -133,6 +168,53 @@ public class AdminController {
         return "redirect:/admin?semesterRemoveOk";
     }
 
+    @RequestMapping(value = "/subject/create",method = RequestMethod.POST)
+    public String createSubject(@Valid @ModelAttribute("subjectCreateForm")SubjectCreateForm subjectCreateForm,
+                                BindingResult result,
+                                FacultyCreateForm facultyCreateForm,
+                                MajorCreateForm majorCreateForm,
+                                TeacherCreateForm teacherCreateForm){
+        if (result.hasErrors()) return "admin";
+        try {
+            subjectService.create(subjectCreateForm);
+        } catch (SemesterNotFoundException e) {
+            return "redirect:/admin?subjectCreateError";
+        }
+        return "redirect:/admin?subjectCreateOk";
+    }
+    @RequestMapping(value = "/subject/remove",method = RequestMethod.POST)
+    public String removeSemesters(@RequestParam long id){
+        try {
+            subjectService.remove(id);
+        } catch (SubjectNotFoundException e) {
+            e.printStackTrace();
+            return "redirect:/admin?subjectRemoveError";
+        }
+        return "redirect:/admin?subjectRemoveOk";
+    }
+
+    @RequestMapping(value = "/teacher/create",method = RequestMethod.POST)
+    public String createTeacher(@Valid @ModelAttribute("teacherCreateForm") TeacherCreateForm teacherCreateForm,
+                                BindingResult result,
+                                FacultyCreateForm facultyCreateForm,
+                                MajorCreateForm majorCreateForm,
+                                SubjectCreateForm subjectCreateForm){
+        if (result.hasErrors()) return "admin";
+        teacherService.create(teacherCreateForm);
+        return "redirect:/admin?teacherCreateOk";
+    }
+    @RequestMapping(value = "/teacher/remove",method = RequestMethod.POST)
+    public String removeTeacher(@RequestParam long id){
+        try {
+            teacherService.remove(id);
+        } catch (TeacherNotFoundException e) {
+            e.printStackTrace();
+            return "redirect:/admin?teacherRemoveError";
+        }
+        return "redirect:/admin?teacherRemoveOk";
+    }
+
+
     /***************************************************/
     /********* ADMIN REST API FOR DYNAMIC FORMS ********/
     /***************************************************/
@@ -143,7 +225,7 @@ public class AdminController {
             Faculty f = facultyService.findById(facultyId);
             return f.getMajors();
         } catch (FacultyNotFoundException e) {
-            return new ArrayList<Major>();
+            return new ArrayList<>();
         }
     }
     @RequestMapping(value = "/semesters/list", method = RequestMethod.GET)
@@ -156,6 +238,16 @@ public class AdminController {
             }
             return major.getSemesters();
         } catch (MajorNotFoundException e) {
+            return new ArrayList<>();
+        }
+    }
+    @RequestMapping(value = "/subjects/list", method = RequestMethod.GET)
+    @ResponseBody
+    public List<Subject> getSubjects(@RequestParam long semesterId){
+        try {
+            Semester semester = semesterService.findById(semesterId);
+            return semester.getSubjects();
+        } catch (SemesterNotFoundException e) {
             return new ArrayList<>();
         }
     }

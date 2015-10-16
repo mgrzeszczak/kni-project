@@ -14,14 +14,9 @@ import pl.kni.services.UserService;
  * Created by Maciej on 13.10.2015.
  */
 @Controller
+@RequestMapping("/res")
 public class TestController {
 
-    @Autowired
-    private UserRepository userRepository;
 
-    @RequestMapping("/rest")
-    @ResponseBody
-    public String admin(){
-        return "test";
-    }
+
 }

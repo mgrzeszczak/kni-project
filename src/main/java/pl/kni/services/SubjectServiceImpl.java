@@ -42,4 +42,11 @@ public class SubjectServiceImpl implements SubjectService {
         if (subject == null) throw new SubjectNotFoundException();
         subjectRepository.delete(subject);
     }
+
+    @Override
+    public Subject findByNameAndSemesterId(String name, long id) throws SubjectNotFoundException {
+        Subject subject = subjectRepository.findByNameAndSemesterId(name,id);
+        if (subject == null) throw new SubjectNotFoundException();
+        return subject;
+    }
 }

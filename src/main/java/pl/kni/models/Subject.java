@@ -1,5 +1,7 @@
 package pl.kni.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,11 +17,14 @@ public class Subject {
     private long id;
 
     @ManyToOne()
+    @JsonIgnore
     private Semester semester;
 
     @ManyToMany(mappedBy = "subjects")
+    @JsonIgnore
     private List<Teacher> teachers;
     @OneToMany(mappedBy = "subject",cascade = CascadeType.REMOVE)
+    @JsonIgnore
     private List<Opinion> opinions;
     private String name;
     private String description;
