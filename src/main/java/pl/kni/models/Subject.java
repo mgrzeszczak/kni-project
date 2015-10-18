@@ -28,6 +28,10 @@ public class Subject {
     @OneToMany(mappedBy = "subject",cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Note> notes;
+    @OneToMany(mappedBy = "subject",cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Book> books;
+
     private String name;
     private String description;
     private String abbrev;
@@ -43,6 +47,14 @@ public class Subject {
 
     public void setNotes(List<Note> notes) {
         this.notes = notes;
+    }
+
+    public List<Book> getBooks() {
+        return books;
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
     }
 
     public String getAbbrev() {

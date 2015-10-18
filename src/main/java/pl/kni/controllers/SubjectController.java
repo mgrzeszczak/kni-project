@@ -1,24 +1,27 @@
 package pl.kni.controllers;
 
+import org.apache.log4j.Logger;
+import org.apache.tomcat.util.http.fileupload.FileUploadBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MaxUploadSizeExceededException;
+import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
 import pl.kni.exceptions.NoteCreationFailedException;
 import pl.kni.exceptions.SemesterNotFoundException;
 import pl.kni.exceptions.SubjectNotFoundException;
+import pl.kni.forms.BookCreateForm;
 import pl.kni.forms.OpinionCreateForm;
-import pl.kni.models.Faculty;
-import pl.kni.models.Major;
-import pl.kni.models.Semester;
-import pl.kni.models.Subject;
-import pl.kni.services.NoteService;
-import pl.kni.services.OpinionService;
-import pl.kni.services.SubjectService;
-import pl.kni.services.TeacherService;
+import pl.kni.models.*;
+import pl.kni.services.*;
+import pl.kni.validation.BookCreateFormValidator;
 
 import javax.validation.Valid;
 import java.io.BufferedOutputStream;
@@ -39,22 +42,47 @@ public class SubjectController {
     private OpinionService opinionService;
     @Autowired
     private NoteService noteService;
+    @Autowired
+    private BookService bookService;
+    @Autowired
+    private BookCreateFormValidator bookCreateFormValidator;
+
+    private final Logger logger = Logger.getLogger(this.getClass());
+
+    @InitBinder(value = "bookCreateForm")
+    public void initFacultyBinder(WebDataBinder binder){
+        binder.addValidators(bookCreateFormValidator);
+    }
+
+    @ExceptionHandler(value = {MaxUploadSizeExceededException.class})
+    public String handleMultipartException(MultipartException e){
+        logger.error(e.getMessage());
+        return "redirect:/html/errors/400.html";
+    }
 
     @RequestMapping(value = "/{id}",method = RequestMethod.GET)
     public String subject(@PathVariable long id,
-                          Model model, OpinionCreateForm opinionCreateForm) throws SubjectNotFoundException{
+                          Model model,
+                          OpinionCreateForm opinionCreateForm,
+                          BookCreateForm bookCreateForm,
+                          Authentication authentication) throws SubjectNotFoundException{
         Subject subject = subjectService.findById(id);
-        model.addAttribute("subject",subject);
+        model.addAttribute("subject", subject);
         model.addAttribute("avgDiff", subjectService.averageDifficulty(subject));
+        model.addAttribute("books",subject.getBooks());
+        Opinion opinion = opinionService.checkIfOpinionCreated(authentication.getName(),id);
+        if (opinion!=null){
+            model.addAttribute("opinion",opinion);
+        }
         return "subject";
     }
 
     @RequestMapping(value = "/{id}/opinion/create",method = RequestMethod.POST)
     public String createOpinion(@Valid @ModelAttribute("opinionCreateForm") OpinionCreateForm opinionCreateForm,
-                                BindingResult result, @PathVariable long id){
-        if (result.hasErrors()) return "/subject/"+String.valueOf("id");
+                                BindingResult result, @PathVariable long id, Authentication authentication){
+        if (result.hasErrors()) return "redirect:/subject/"+id+"?opinionCreateError";
         try {
-            opinionService.add(opinionCreateForm);
+            opinionService.add(opinionCreateForm,authentication.getName());
         } catch (SubjectNotFoundException e) {
             e.printStackTrace();
             return "redirect:/subject/"+String.valueOf(id)+"?opinionCreateError";
@@ -63,51 +91,33 @@ public class SubjectController {
     }
 
     @RequestMapping(value = "/{id}/note/upload",method = RequestMethod.POST)
-    public String uploadNote(@RequestParam("name") String name,
-                             @RequestParam("file") MultipartFile file,
-                             @PathVariable long id){
-
-        System.out.println(name);
-        if (file.isEmpty()) return "redirect:/subject/"+String.valueOf(id)+"?fileUploadError";
+    public String uploadNote(@RequestParam("file") MultipartFile file,
+                             @PathVariable long id) throws MaxUploadSizeExceededException{
+        if (file.isEmpty()) return "redirect:/subject/"+id+"?fileUploadError";
         try {
-            noteService.create(name,id,file);
+            noteService.create(file.getOriginalFilename(), id, file);
         } catch (NoteCreationFailedException e) {
             if (e.cause()== NoteCreationFailedException.Cause.NAME_TAKEN)
-            return "redirect:/subject/"+String.valueOf(id)+"?fileUploadNameTaken";
-            else return "redirect:/subject/"+String.valueOf(id)+"?fileUploadError";
+            return "redirect:/subject/"+id+"?fileUploadNameTaken";
+            else return "redirect:/subject/"+id+"?fileUploadError";
         }
-        return "redirect:/subject/"+String.valueOf(id)+"?fileUploadOk";
+        return "redirect:/subject/"+id+"?fileUploadOk";
     }
 
-
-
-    private void writeToHardDrive(MultipartFile file, File outputFile) throws IOException {
-        byte[] bytes = file.getBytes();
-        BufferedOutputStream stream =
-                new BufferedOutputStream(new FileOutputStream(outputFile));
-        stream.write(bytes);
-        stream.close();
-    }
-
-    private File checkNameAvailability(String name, long subjectId) throws IOException {
+    @RequestMapping(value = "/{id}/book/create",method = RequestMethod.POST)
+    public String createBook(@Valid @ModelAttribute("bookCreateForm")BookCreateForm bookCreateForm,
+                             BindingResult result,
+                             @PathVariable long id) {
+        if (result.hasErrors()) return "redirect:/subject/"+id+"?bookCreateExists";
         try {
-            Subject subject = subjectService.findById(subjectId);
-            Semester semester = subject.getSemester();
-            Major major = semester.getMajor();
-            Faculty faculty = major.getFaculty();
-            String folderPath = "E:/Resources/"+faculty.getName()+"/"+major.getName()+"/Semestr "+semester.getNumber()+"/"+subject.getName();
-            String filePath = folderPath+"/"+name;
-            File folder = new File(folderPath);
-            if (!folder.exists()) {
-                folder.mkdirs();
-                return new File(filePath);
-            }
-            File file = new File(filePath);
-            if (file.exists()) return null;
-            return file;
+            bookService.create(bookCreateForm, id);
         } catch (SubjectNotFoundException e) {
             e.printStackTrace();
-            return null;
+            return "redirect:/subject/"+id+"?bookCreateInvalid";
         }
+        return "redirect:/subject/"+id+"?bookCreateOk";
+        // Subject subject = subjectService.findById(id);
+        // model.addAttribute("subject",subject);
+        // return "subject";
     }
 }

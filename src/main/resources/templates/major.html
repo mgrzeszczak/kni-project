@@ -6,7 +6,7 @@
 <body>
 
 <div th:each="semester : ${major.semesters}" >
-    <p th:text="'Semester '+${semester.number}"/>
+    <p th:text="'Semestr '+${semester.number}"/>
     <a th:href="@{/semester/__${semester.id}__}">Go!</a>
 </div>
 

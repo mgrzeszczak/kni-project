@@ -16,6 +16,8 @@ public class Opinion {
     private String comment;
     private int rating;
 
+    private String username;
+
     @ManyToOne(cascade = CascadeType.REMOVE)
     private Subject subject;
 
@@ -33,6 +35,14 @@ public class Opinion {
 
     public void setId(long id) {
         this.id = id;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public Subject getSubject() {

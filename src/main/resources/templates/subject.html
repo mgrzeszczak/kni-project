@@ -14,17 +14,21 @@
         <h2 th:text="${'Average difficulty: '+#numbers.formatDecimal(avgDiff, 0, 2)}">Average difficulty: 5.0</h2>
     </div>
 
+
+
     <div>
         <h2>Opinions</h2>
         <div th:each="opinion : ${subject.opinions}">
             <div>
                 <h3 th:text="${'Difficulty: '+opinion.rating}"></h3>
                 <p th:text="${opinion.comment}"></p>
+                <div th:if="${opinion.username==currentUser.getUsername()}">MINE</div>
             </div>
         </div>
     </div>
 
-    <div>
+
+    <div th:if="${opinion==null}">
         <form th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
             <fieldset>
                 <legend>Add opinion</legend>
@@ -60,15 +64,12 @@
                 <input id="file" type="file" name="file" />
             </div>
             <div>
-                <input type="hidden" id="fileName" name="name"/>
-            </div>
-            <div>
                 <input type="submit" value="Upload"/>
             </div>
-            <script>
+            <!--<script>
                 var fileInput = document.getElementById('file');
                 fileInput.onchange = function(e) { fileOnChange(e); };
-            </script>
+            </script>-->
             <span th:if="${param.fileUploadOk}">File uploaded successfully.</span>
             <span th:if="${param.fileUploadError}">Failed to upload file.</span>
             <span th:if="${param.fileUploadNameTaken}">File with that name already exists.</span>
@@ -80,6 +81,32 @@
             <a th:href="@{/res/__${note.path}__}" th:text="${note.name}"></a>
         </div>
     </div>
+
+    <div>
+        <h2>Recommended books</h2>
+        <div>
+            <div th:each="book : ${books}">
+                <p th:text="${book.title+' by '+book.author + ' - '+book.recommended + ' times'}"/>
+            </div>
+        </div>
+        <div>
+            <form method="post" th:action="@{/subject/__${subject.id}__/book/create}" th:object="${bookCreateForm}">
+                <div>
+                    <label>Title:</label>
+                    <input type="text" th:field="*{title}"/>
+                </div>
+                <div>
+                    <label>Author:</label>
+                    <input type="text" th:field="*{author}"/>
+                </div>
+                <span th:if="${param.bookCreateOk}">Book added successfully.</span>
+                <span th:if="${param.bookCreateInvalid}">Failed to add book.</span>
+                <span th:if="${param.bookCreateExists}">Book already exists.</span>
+                <button type="submit">Add</button>
+            </form>
+        </div>
+    </div>
+
 </div>
 
 </body>

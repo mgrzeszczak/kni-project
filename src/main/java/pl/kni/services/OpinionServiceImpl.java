@@ -6,6 +6,7 @@ import pl.kni.exceptions.SubjectNotFoundException;
 import pl.kni.forms.OpinionCreateForm;
 import pl.kni.models.Opinion;
 import pl.kni.models.Subject;
+import pl.kni.models.User;
 import pl.kni.repositories.OpinionRepository;
 import pl.kni.repositories.SubjectRepository;
 
@@ -24,11 +25,17 @@ public class OpinionServiceImpl implements OpinionService {
     private OpinionRepository opinionRepository;
 
     @Override
-    public Opinion add(OpinionCreateForm opinionCreateForm) throws SubjectNotFoundException {
+    public Opinion add(OpinionCreateForm opinionCreateForm, String username) throws SubjectNotFoundException {
         long subjectId = opinionCreateForm.getSubjectId();
         Subject subject = subjectService.findById(subjectId);
         Opinion opinion = new Opinion(opinionCreateForm,subject);
+        opinion.setUsername(username);
         return opinionRepository.save(opinion);
+    }
+
+    @Override
+    public Opinion checkIfOpinionCreated(String username, long subjectId) {
+        return opinionRepository.findOpinionByUsernameAndSubjectId(username,subjectId);
     }
 
 }

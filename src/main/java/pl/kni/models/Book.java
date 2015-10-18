@@ -1,13 +1,11 @@
 package pl.kni.models;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 /**
  * Created by Maciej on 16.10.2015.
  */
-//@Entity
+@Entity
 public class Book {
 
     @Id
@@ -15,8 +13,29 @@ public class Book {
     private long id;
     private String title;
     private String author;
+    private int recommended =1;
+
+    @ManyToOne
+    private Subject subject;
 
     public Book() {
+
+    }
+
+    public int getRecommended() {
+        return recommended;
+    }
+
+    public void setRecommended(int recommended) {
+        this.recommended = recommended;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
     }
 
     public long getId() {
