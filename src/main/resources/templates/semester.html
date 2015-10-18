@@ -5,10 +5,9 @@
 </head>
 <body>
 
-<div th:each="subject : ${subjects}" >
-    <p th:text="${subject.name}"/>
+<div th:each="subject : ${semester.subjects}" >
+    <a th:href="@{/subject/__${subject.id}__}" th:text="${subject.name}"/>
     <p th:text="${subject.description}"/>
-    <a th:href="${#httpServletRequest.requestURL.toString()}+'/'+${subject.abbrev}">Go!</a>
 </div>
 
 </body>

@@ -5,28 +5,11 @@
 </head>
 <body>
 
-<div th:each="major : ${majors}" >
+<div th:each="major : ${faculty.majors}" >
     <p th:text="${major.name}"/>
-    <a th:href="${#httpServletRequest.requestURL.toString()}+'/'+${major.abbrev}">Go!</a>
+    <a th:href="@{/major/__${major.id}__}">Go!</a>
 </div>
 
-
-<p th:value="${facultyId}"></p>
-
-<div th:if="${currentUser!=null and currentUser.getRole()==admin}">
-    <form th:action="@{/admin/major/create}" method="post" th:object="${majorCreateForm}">
-        <fieldset>
-            <legend>Add major</legend>
-            <div>
-                <label for="name">Name:</label>
-                <input type="name" name="name" id="name" required="true" autofocus="true"/>
-                <span th:if="${#fields.hasErrors('name')}"></span>
-            </div>
-            <input type="hidden" name="facultyId" id="facultyId" th:value="${facultyId}"/>
-            <button type="submit">Create</button>
-        </fieldset>
-    </form>
-</div>
 
 </body>
 </html>

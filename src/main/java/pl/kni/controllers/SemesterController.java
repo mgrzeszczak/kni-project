@@ -23,23 +23,16 @@ import java.util.List;
  * Created by Maciej on 11.10.2015.
  */
 @Controller
+@RequestMapping("/semester")
 public class SemesterController {
 
     @Autowired
     private SemesterService semesterService;
 
-    @RequestMapping(value = "/{faculty}/{major}/sem/{number}",method = RequestMethod.GET)
-    public String semester(@PathVariable String faculty,
-                           @PathVariable String major,
-                           @PathVariable int number,
-                           Model model){
-        try {
-            model.addAttribute("subjects", semesterService.getSubjects(faculty, major, number));
-        } catch (SemesterNotFoundException e) {
-            // TODO: handle error by returning 404 page
-            model.addAttribute("error","This semester doesn't exist.");
-            return "404";
-        }
+    @RequestMapping(value = "/{id}",method = RequestMethod.GET)
+    public String sem(@PathVariable long id, Model model) throws SemesterNotFoundException{
+        Semester semester = semesterService.findById(id);
+        model.addAttribute("semester",semester);
         return "semester";
     }
 

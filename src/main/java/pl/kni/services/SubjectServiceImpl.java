@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import pl.kni.exceptions.SemesterNotFoundException;
 import pl.kni.exceptions.SubjectNotFoundException;
 import pl.kni.forms.SubjectCreateForm;
+import pl.kni.models.Opinion;
 import pl.kni.models.Semester;
 import pl.kni.models.Subject;
 import pl.kni.repositories.SemesterRepository;
@@ -23,6 +24,13 @@ public class SubjectServiceImpl implements SubjectService {
     private SubjectRepository subjectRepository;
     @Autowired
     private SemesterRepository semesterRepository;
+
+    @Override
+    public Subject findById(long id) throws SubjectNotFoundException {
+        Subject subject = subjectRepository.findOne(id);
+        if (subject == null) throw new SubjectNotFoundException();
+        return subject;
+    }
 
     @Override
     public Subject create(SubjectCreateForm subjectCreateForm) throws SemesterNotFoundException {
@@ -48,5 +56,14 @@ public class SubjectServiceImpl implements SubjectService {
         Subject subject = subjectRepository.findByNameAndSemesterId(name,id);
         if (subject == null) throw new SubjectNotFoundException();
         return subject;
+    }
+
+    @Override
+    public double averageDifficulty(Subject subject) {
+        double sum = 0;
+        for (Opinion opinion : subject.getOpinions()){
+            sum+=opinion.getRating();
+        }
+        return sum/subject.getOpinions().size();
     }
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head th:include="head">
+    <!--<link rel="stylesheet" type="text/css" href="/static/css/css.css" th:href="@{/css/css.css}"/>-->
+
+
+</head>
+<body>
+
+<div class="mainBox">
+    <div>
+        <h1 th:text="${subject.name}">Name</h1>
+        <h2 th:text="${subject.description}">Description</h2>
+        <h2 th:text="${'Average difficulty: '+#numbers.formatDecimal(avgDiff, 0, 2)}">Average difficulty: 5.0</h2>
+    </div>
+
+    <div>
+        <h2>Opinions</h2>
+        <div th:each="opinion : ${subject.opinions}">
+            <div>
+                <h3 th:text="${'Difficulty: '+opinion.rating}"></h3>
+                <p th:text="${opinion.comment}"></p>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <form th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
+            <fieldset>
+                <legend>Add opinion</legend>
+                <div>
+                    <label>Comment:</label>
+                    <input type="text" th:field="*{comment}" required="true"/>
+                    <span th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
+                </div>
+                <div>
+                    <label>Difficulty:</label>
+                    <select th:field="*{rating}" required="true">
+                        <option value="1" >1</option>
+                        <option value="2" >2</option>
+                        <option value="3" >3</option>
+                        <option value="4" >4</option>
+                        <option value="5" >5</option>
+                    </select>
+                </div>
+                <input type="hidden" name="subjectId" th:value="${subject.id}"/>
+                <button type="submit" >Add</button>
+                <span th:if="${param.opinionCreateOk}">Opinion added successfully.</span>
+                <span th:if="${param.opinionCreateError}">Failed to add opinion.</span>
+            </fieldset>
+        </form>
+    </div>
+
+    <div>
+        <h2>Notes</h2>
+        <h3>Upload</h3>
+        <form method="POST" enctype="multipart/form-data"
+              th:action="@{/subject/__${subject.id}__/note/upload}">
+            <div>
+                <input id="file" type="file" name="file" />
+            </div>
+            <div>
+                <input type="hidden" id="fileName" name="name"/>
+            </div>
+            <div>
+                <input type="submit" value="Upload"/>
+            </div>
+            <script>
+                var fileInput = document.getElementById('file');
+                fileInput.onchange = function(e) { fileOnChange(e); };
+            </script>
+            <span th:if="${param.fileUploadOk}">File uploaded successfully.</span>
+            <span th:if="${param.fileUploadError}">Failed to upload file.</span>
+            <span th:if="${param.fileUploadNameTaken}">File with that name already exists.</span>
+        </form>
+
+
+        <h3>List:</h3>
+        <div th:each="note : ${subject.notes}">
+            <a th:href="@{/res/__${note.path}__}" th:text="${note.name}"></a>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

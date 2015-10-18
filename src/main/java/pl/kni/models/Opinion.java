@@ -1,5 +1,7 @@
 package pl.kni.models;
 
+import pl.kni.forms.OpinionCreateForm;
+
 import javax.persistence.*;
 
 /**
@@ -16,6 +18,12 @@ public class Opinion {
 
     @ManyToOne(cascade = CascadeType.REMOVE)
     private Subject subject;
+
+    public Opinion(OpinionCreateForm opinionCreateForm, Subject subject) {
+        this.comment = opinionCreateForm.getComment();
+        this.rating = opinionCreateForm.getRating();
+        this.subject= subject;
+    }
 
     public Opinion() {}
 

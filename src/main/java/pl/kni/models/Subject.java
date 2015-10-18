@@ -16,16 +16,18 @@ public class Subject {
     @GeneratedValue
     private long id;
 
-    @ManyToOne()
+    @ManyToOne
     @JsonIgnore
     private Semester semester;
-
     @ManyToMany(mappedBy = "subjects")
     @JsonIgnore
     private List<Teacher> teachers;
     @OneToMany(mappedBy = "subject",cascade = CascadeType.REMOVE)
     @JsonIgnore
     private List<Opinion> opinions;
+    @OneToMany(mappedBy = "subject",cascade = CascadeType.REMOVE)
+    @JsonIgnore
+    private List<Note> notes;
     private String name;
     private String description;
     private String abbrev;
@@ -33,6 +35,14 @@ public class Subject {
     public Subject() {
         teachers = new ArrayList<Teacher>();
         opinions = new ArrayList<Opinion>();
+    }
+
+    public List<Note> getNotes() {
+        return notes;
+    }
+
+    public void setNotes(List<Note> notes) {
+        this.notes = notes;
     }
 
     public String getAbbrev() {

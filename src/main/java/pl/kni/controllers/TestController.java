@@ -14,9 +14,19 @@ import pl.kni.services.UserService;
  * Created by Maciej on 13.10.2015.
  */
 @Controller
-@RequestMapping("/res")
 public class TestController {
 
+    @Autowired
+    private UserRepository userRepository;
 
+    @RequestMapping("/create-admin")
+    @ResponseBody
+    public User createAdmin(){
+        User user = new User();
+        user.setRole(Role.ADMIN);
+        user.setEmail("admin@pw.edu.pl");
+        user.setPassword(new BCryptPasswordEncoder().encode("password"));
+        return userRepository.save(user);
+    }
 
 }

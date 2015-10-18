@@ -5,16 +5,9 @@
 </head>
 <body>
 
-<div th:each="semester : ${semesters}" >
+<div th:each="semester : ${major.semesters}" >
     <p th:text="'Semester '+${semester.number}"/>
-    <a th:href="${#httpServletRequest.requestURL.toString()}+'/sem/'+${semester.number}">Go!</a>
-</div>
-
-<div th:if="${currentUser!=null and currentUser.getRole()==admin}">
-    <form th:action="@{/admin/semester/create}" method="post">
-        <input type="hidden" name="majorId" id="majorId" th:value="${majorId}"/>
-        <button type="submit">Add semester</button>
-    </form>
+    <a th:href="@{/semester/__${semester.id}__}">Go!</a>
 </div>
 
 </body>
