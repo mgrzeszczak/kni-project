@@ -22,7 +22,12 @@
             <div>
                 <h3 th:text="${'Difficulty: '+opinion.rating}"></h3>
                 <p th:text="${opinion.comment}"></p>
-                <div th:if="${opinion.username==currentUser.getUsername()}">MINE</div>
+                <div th:if="${opinion.username==currentUser.getUsername()}">
+                    <form th:action="@{/subject/__${subject.id}__/opinion/delete}" method="POST" >
+                        <input type="hidden" name="opinionId" th:value="${opinion.id}"/>
+                        <button type="submit">Delete</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
@@ -51,6 +56,7 @@
                 <button type="submit" >Add</button>
                 <span th:if="${param.opinionCreateOk}">Opinion added successfully.</span>
                 <span th:if="${param.opinionCreateError}">Failed to add opinion.</span>
+                <span th:if="${param.opinionDeleteOk}">Opinion removed successfully.</span>
             </fieldset>
         </form>
     </div>
@@ -94,10 +100,12 @@
                 <div>
                     <label>Title:</label>
                     <input type="text" th:field="*{title}"/>
+                    <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
                 </div>
                 <div>
                     <label>Author:</label>
                     <input type="text" th:field="*{author}"/>
+                    <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
                 </div>
                 <span th:if="${param.bookCreateOk}">Book added successfully.</span>
                 <span th:if="${param.bookCreateInvalid}">Failed to add book.</span>

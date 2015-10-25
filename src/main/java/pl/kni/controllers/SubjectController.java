@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.web.bind.support.AuthenticationPrincipalArgumentResolver;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -14,7 +15,10 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
 import org.springframework.web.multipart.MultipartException;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.HandlerExceptionResolver;
+import org.springframework.web.servlet.ModelAndView;
 import pl.kni.exceptions.NoteCreationFailedException;
+import pl.kni.exceptions.OpinionNotFoundException;
 import pl.kni.exceptions.SemesterNotFoundException;
 import pl.kni.exceptions.SubjectNotFoundException;
 import pl.kni.forms.BookCreateForm;
@@ -23,6 +27,8 @@ import pl.kni.models.*;
 import pl.kni.services.*;
 import pl.kni.validation.BookCreateFormValidator;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.io.BufferedOutputStream;
 import java.io.File;
@@ -66,28 +72,25 @@ public class SubjectController {
                           OpinionCreateForm opinionCreateForm,
                           BookCreateForm bookCreateForm,
                           Authentication authentication) throws SubjectNotFoundException{
-        Subject subject = subjectService.findById(id);
-        model.addAttribute("subject", subject);
-        model.addAttribute("avgDiff", subjectService.averageDifficulty(subject));
-        model.addAttribute("books",subject.getBooks());
-        Opinion opinion = opinionService.checkIfOpinionCreated(authentication.getName(),id);
-        if (opinion!=null){
-            model.addAttribute("opinion",opinion);
-        }
+        setModel(model, id, authentication);
         return "subject";
     }
 
     @RequestMapping(value = "/{id}/opinion/create",method = RequestMethod.POST)
-    public String createOpinion(@Valid @ModelAttribute("opinionCreateForm") OpinionCreateForm opinionCreateForm,
-                                BindingResult result, @PathVariable long id, Authentication authentication){
-        if (result.hasErrors()) return "redirect:/subject/"+id+"?opinionCreateError";
-        try {
-            opinionService.add(opinionCreateForm,authentication.getName());
-        } catch (SubjectNotFoundException e) {
-            e.printStackTrace();
-            return "redirect:/subject/"+String.valueOf(id)+"?opinionCreateError";
+    public String createOpinion(@Valid @ModelAttribute("opinionCreateForm") OpinionCreateForm opinionCreateForm, BookCreateForm bookCreateForm,
+                                BindingResult result, @PathVariable long id, Authentication authentication, Model model) throws SubjectNotFoundException{
+        if (result.hasErrors()) {
+            setModel(model,id,authentication);
+            return "subject";
         }
+        opinionService.add(opinionCreateForm, authentication.getName());
         return "redirect:/subject/"+String.valueOf(id)+"?opinionCreateOk";
+    }
+
+    @RequestMapping(value = "/{id}/opinion/delete",method = RequestMethod.POST)
+    public String removeOpinion(@RequestParam("opinionId") long opinionId, @PathVariable long id) throws SubjectNotFoundException, OpinionNotFoundException{
+        opinionService.remove(opinionId);
+        return "redirect:/subject/"+id+"?opinionDeleteOk";
     }
 
     @RequestMapping(value = "/{id}/note/upload",method = RequestMethod.POST)
@@ -107,17 +110,23 @@ public class SubjectController {
     @RequestMapping(value = "/{id}/book/create",method = RequestMethod.POST)
     public String createBook(@Valid @ModelAttribute("bookCreateForm")BookCreateForm bookCreateForm,
                              BindingResult result,
-                             @PathVariable long id) {
-        if (result.hasErrors()) return "redirect:/subject/"+id+"?bookCreateExists";
-        try {
-            bookService.create(bookCreateForm, id);
-        } catch (SubjectNotFoundException e) {
-            e.printStackTrace();
-            return "redirect:/subject/"+id+"?bookCreateInvalid";
+                             @PathVariable long id, Model model, Authentication authentication) throws SubjectNotFoundException {
+        if (result.hasErrors()) {
+            setModel(model,id,authentication);
+            return "subject";
         }
+        bookService.create(bookCreateForm, id);
         return "redirect:/subject/"+id+"?bookCreateOk";
-        // Subject subject = subjectService.findById(id);
-        // model.addAttribute("subject",subject);
-        // return "subject";
+    }
+
+    private void setModel(Model model, long subjectId, Authentication authentication) throws SubjectNotFoundException{
+        Subject subject = subjectService.findById(subjectId);
+        model.addAttribute("subject", subject);
+        model.addAttribute("avgDiff", subjectService.averageDifficulty(subject));
+        model.addAttribute("books",subject.getBooks());
+        Opinion opinion = opinionService.checkIfOpinionCreated(authentication.getName(),subjectId);
+        if (opinion!=null){
+            model.addAttribute("opinion",opinion);
+        }
     }
 }

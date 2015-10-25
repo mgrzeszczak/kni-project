@@ -2,6 +2,7 @@ package pl.kni.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import pl.kni.exceptions.OpinionNotFoundException;
 import pl.kni.exceptions.SubjectNotFoundException;
 import pl.kni.forms.OpinionCreateForm;
 import pl.kni.models.Opinion;
@@ -37,5 +38,13 @@ public class OpinionServiceImpl implements OpinionService {
     public Opinion checkIfOpinionCreated(String username, long subjectId) {
         return opinionRepository.findOpinionByUsernameAndSubjectId(username,subjectId);
     }
+
+    @Override
+    public void remove(long opinionId) throws OpinionNotFoundException {
+        Opinion opinion = opinionRepository.findOne(opinionId);
+        if (opinion== null) throw new OpinionNotFoundException();
+        opinionRepository.delete(opinion);
+    }
+
 
 }

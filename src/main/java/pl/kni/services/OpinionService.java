@@ -1,5 +1,6 @@
 package pl.kni.services;
 
+import pl.kni.exceptions.OpinionNotFoundException;
 import pl.kni.exceptions.SubjectNotFoundException;
 import pl.kni.forms.OpinionCreateForm;
 import pl.kni.models.Opinion;
@@ -12,7 +13,7 @@ import pl.kni.models.User;
 public interface OpinionService {
 
     Opinion add(OpinionCreateForm opinionCreateForm, String username) throws SubjectNotFoundException;
-
     Opinion checkIfOpinionCreated(String username, long subjectId);
+    void remove(long opinionId) throws OpinionNotFoundException;
 
 }

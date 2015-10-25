@@ -18,7 +18,7 @@ public class Opinion {
 
     private String username;
 
-    @ManyToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private Subject subject;
 
     public Opinion(OpinionCreateForm opinionCreateForm, Subject subject) {

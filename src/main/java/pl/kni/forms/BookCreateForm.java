@@ -2,12 +2,15 @@ package pl.kni.forms;
 
 import org.hibernate.validator.constraints.NotEmpty;
 
+import javax.validation.constraints.Pattern;
+
 /**
  * Created by Maciej on 18.10.2015.
  */
 public class BookCreateForm {
 
     @NotEmpty
+    @Pattern(regexp = "([A-Za-z]+)")
     private String author;
     @NotEmpty
     private String title;
