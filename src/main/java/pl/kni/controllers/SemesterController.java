@@ -3,10 +3,7 @@ package pl.kni.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import pl.kni.exceptions.SemesterNotFoundException;
 import pl.kni.models.Faculty;
 import pl.kni.models.Major;
@@ -26,6 +23,11 @@ import java.util.List;
 @RequestMapping("/semester")
 public class SemesterController {
 
+    @ModelAttribute("content")
+    public String content(){
+        return "semester";
+    }
+
     @Autowired
     private SemesterService semesterService;
 
@@ -33,7 +35,7 @@ public class SemesterController {
     public String sem(@PathVariable long id, Model model) throws SemesterNotFoundException{
         Semester semester = semesterService.findById(id);
         model.addAttribute("semester",semester);
-        return "semester";
+        return "index";
     }
 
 

@@ -55,6 +55,11 @@ public class SubjectController {
 
     private final Logger logger = Logger.getLogger(this.getClass());
 
+    @ModelAttribute("content")
+    public String content(){
+        return "subject";
+    }
+
     @InitBinder(value = "bookCreateForm")
     public void initFacultyBinder(WebDataBinder binder){
         binder.addValidators(bookCreateFormValidator);
@@ -73,7 +78,8 @@ public class SubjectController {
                           BookCreateForm bookCreateForm,
                           Authentication authentication) throws SubjectNotFoundException{
         setModel(model, id, authentication);
-        return "subject";
+        model.addAttribute("tab","books");
+        return "index";
     }
 
     @RequestMapping(value = "/{id}/opinion/create",method = RequestMethod.POST)

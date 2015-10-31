@@ -1,15 +1,16 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
-<head>
-    <link rel="stylesheet" type="text/css" href="/static/css/css.css" th:href="@{/css/css.css}"/>
-</head>
-<body>
-
-<div th:each="major : ${faculty.majors}" >
-    <p th:text="${major.name}"/>
-    <a th:href="@{/major/__${major.id}__}">Go!</a>
-</div>
-
-
-</body>
+    <div th:fragment="fragment" >
+        <section class="header-breadcrumbs">
+            <a th:href="@{/}">Strona główna</a>
+        </section>
+        <h2>Kierunki</h2>
+        <div class="faculties">
+            <ul>
+                <li th:each="major : ${faculty.majors}" >
+                    <a th:href="@{/major/__${major.id}__}" th:text="${major.name}"></a>
+                </li>
+            </ul>
+        </div>
+    </div>
 </html>

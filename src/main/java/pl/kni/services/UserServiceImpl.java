@@ -20,6 +20,8 @@ public class UserServiceImpl implements UserService{
     @Autowired
     private UserRepository userRepository;
 
+
+
     @Override
     public User findByEmail(String email) throws UserNotFoundException {
         User user =  userRepository.findOneByEmail(email);

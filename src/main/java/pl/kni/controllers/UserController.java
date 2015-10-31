@@ -25,6 +25,11 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @ModelAttribute("content")
+    public String content(){
+        return "register";
+    }
+
     @Autowired
     private UserCreateFormValidator userCreateFormValidator;
 
@@ -35,13 +40,13 @@ public class UserController {
 
     @RequestMapping(value = "/register",method = RequestMethod.GET)
     public String getRegisterPage(UserCreateForm userCreateForm){
-        return "register";
+        return "index";
     }
 
     @RequestMapping(value = "/register",method = RequestMethod.POST)
     public String register(@Valid @ModelAttribute("userCreateForm") UserCreateForm userCreateForm, BindingResult result, Model model){
         if (result.hasErrors()) {
-            return "register";
+            return "index";
         }
         userService.create(userCreateForm);
         return "redirect:/login";
