@@ -1,0 +1,116 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-image: url('../images/background.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+header {
+    width: 100%;
+    height: 100px;
+    background-color: #ffffff;
+    position: relative;
+    border-bottom: 1px solid gainsboro;
+}
+
+.content-box {
+    min-height: 100%;
+    height: auto !important;
+    height: 100%;
+    margin-bottom: -30px;
+}
+
+.push {
+    height: 30px;
+}
+
+footer {
+    height: 30px;
+    width: 100%;
+    background-color: #ffffff;
+    overflow: hidden;
+    border-top: 1px solid gainsboro;
+}
+
+
+
+/*
+
+*/
+
+.header-logo {
+    display: inline-block;
+    width: 30%;
+}
+
+.header-breadcrumbs {
+    width: 40%;
+    text-align: center;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.header-breadcrumbs a {
+    font-size: 18px;
+}
+
+.header-breadcrumbs a:hover {
+    text-decoration: none;
+}
+
+.header-login {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+}
+.header-login a {
+
+}
+
+.content {
+    position: absolute;
+    top: 100px;
+    bottom: 30px;
+    overflow: auto;
+    left: 20%;
+    right: 20%;
+    width: 60%;
+    margin: 0 auto;
+    padding: 5px;
+    background-color: rgba(255,255,255, 0.90);
+}
+
+
+.footer-content {
+    padding: 10px 0 0 0;
+    text-align: center;
+}
+
+.footer-logo {
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+.footer-logo img {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.footer-text {
+    margin: 0 0 0 30px;
+    transform: translateY(-50%);
+    display: inline-block;
+    vertical-align: middle;
+}
+
+

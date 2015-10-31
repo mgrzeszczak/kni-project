@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<div th:fragment="fragment">
+    <h2>Wydziały</h2>
+    <div class="faculties">
+        <ul>
+            <li th:each="faculty : ${faculties}" >
+                <a th:href="@{/faculty/__${faculty.id}__}" th:text="${faculty.name}"></a>
+            </li>
+        </ul>
+        <p th:if="${faculties.size()}==0">Nie ma jeszcze dodanych wydziałów.</p>
+    </div>
+</div>
+</html>
