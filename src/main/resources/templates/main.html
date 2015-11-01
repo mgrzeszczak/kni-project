@@ -1,0 +1,25 @@
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<div th:fragment="fragment">
+
+	<nav>
+		<div class="nav-wrapper teal">
+			<a class="brand-logo center">Strona główna</a>
+		</div>
+	</nav>
+
+	<div class="container">
+		<div class="col s12">
+			<div class="row">
+				<div class="center-align card-panel teal">
+					<h5 class="white-text">Wybierz wydział</h5>
+				</div>
+				<div class="col s12">
+					<div class="collection">
+						<a th:each="faculty:${faculties}" th:href="@{/faculty/__${faculty.id}__}" th:text="${faculty.name}" class="collection-item"></a>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+</html>

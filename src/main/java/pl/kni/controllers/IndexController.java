@@ -31,7 +31,7 @@ public class IndexController {
 
     @ModelAttribute("content")
     public String content(){
-        return "index2";
+        return "main";
     }
 
     @RequestMapping(value = "", method = RequestMethod.GET)

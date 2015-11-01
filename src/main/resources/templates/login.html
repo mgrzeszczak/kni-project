@@ -1,48 +1,38 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.w3.org/1999/xhtml"> 
 <div th:fragment="fragment">
 
-    <h2>Logowanie</h2>
-    <form class="form-horizontal" th:action="@{/login}" method="post">
-        <fieldset>
-            <!-- Text input-->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="email" >E-mail</label>
-                <div class="col-md-4">
-                    <input id="email" name="email" placeholder="E-mail" required="true" class="form-control input-md" type="text"/>
-                </div>
-            </div>
 
-            <!-- Password input-->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="password">Hasło</label>
-                <div class="col-md-4">
-                    <input id="password" name="password" required="true" placeholder="Hasło" class="form-control input-md" type="password"/>
-                    <span th:if="${param.error}" class="error-block">Niepoprawny e-mail lub hasło.</span>
-                </div>
-            </div>
-
-            <!-- Multiple Checkboxes -->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="remember-me"></label>
-                <div class="col-md-4">
-                    <div class="checkbox">
-                        <label for="remember-me">
-                            <input name="remember-me" id="remember-me" type="checkbox"/>
-                            Zapamiętaj mnie
-                        </label>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Button -->
-            <div class="form-group">
-                <label class="col-md-4 control-label" for="login"></label>
-                <div class="col-md-4">
-                    <button id="login" type="submit" class="btn btn-primary">Zaloguj</button>
-                </div>
-            </div>
-        </fieldset>
+	<div class="row">
+		<h2 class="header">Logowanie</h2>
+	</div>
+  <div class="row">
+    <form class="col s8" th:action="@{/login}" method="post">
+		<div class="row">
+			<div class="input-field col s8">
+				<input id="email" type="email" name="email" class="validate" required=""/>
+				<label for="email">E-mail</label>
+			</div>
+		</div>
+		<div class="row">
+			<div class="input-field col s8">
+				<input id="password" name="password" type="password" class="validate" required=""/>
+				<label for="password">Hasło</label>
+				<span class="error"></span>
+			</div>
+		</div>
+		<div class="row">
+			<div class="col s4">
+				<button type="submit" class="waves-effect waves-light btn">Zaloguj się</button>
+			</div>
+			<div class="col s4">
+				<input type="checkbox" name="remember-me" id="remember-me" />
+				<label for="remember-me">Zapamiętaj mnie</label>
+			</div>
+		</div>
+		<div class="row col s6">
+			<span th:if="${param.error}" class="error-block">Niepoprawny e-mail lub hasło.</span>
+		</div>
     </form>
+  </div>
 </div>
 </html>

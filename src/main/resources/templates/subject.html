@@ -14,19 +14,29 @@
             <h1 th:text="${subject.name}">Algebra liniowa</h1>
         </div>
 
-        <div class="links row">
-            <div class="col-md-2 active" data-action="toggle" data-target="description">Opis przedmiotu</div>
-            <div class="col-md-2" data-action="toggle" data-target="opinions">Opinie</div>
-            <div class="col-md-2" data-action="toggle" data-target="notes">Notatki</div>
-            <div class="col-md-2" data-action="toggle" data-target="books">Książki</div>
-            <div class="col-md-2" data-action="toggle" data-target="teachers">Nauczyciele</div>
-        </div>
+        <ul class="nav nav-pills" role="tablist">
+            <li role="presentation" class="active">
+                <a href="#description" aria-controls="description" role="tab" data-toggle="tab">Opis</a>
+            </li>
+            <li role="presentation">
+                <a href="#opinions" aria-controls="opinions" role="tab" data-toggle="tab">Opinie</a>
+            </li>
+            <li role="presentation">
+                <a href="#files" aria-controls="files" role="tab" data-toggle="tab">Pliki</a>
+            </li>
+            <li role="presentation">
+                <a href="#books" aria-controls="books" role="tab" data-toggle="tab">Książki</a>
+            </li>
+            <li role="presentation">
+                <a href="#teachers" aria-controls="teachers" role="tab" data-toggle="tab">Nauczyciele</a>
+            </li>
+        </ul>
 
-        <div id="description">
+        <div id="description" role="tabpanel" class="tab-pane">
             <p th:text="${subject.description}"></p>
         </div>
 
-        <div id="opinions">
+        <div id="opinions" role="tabpanel" class="tab-pane">
             <div th:if="${opinion==null}">
                 <form class="form-horizontal" th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
                     <fieldset>
@@ -65,35 +75,6 @@
                         </div>
                     </fieldset>
                 </form>
-
-
-
-
-                <!--<form th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
-                    <fieldset>
-                        <legend>Dodaj opinię</legend>
-                        <div>
-                            <label>Treść:</label>
-                            <input type="text" th:field="*{comment}" required="true"/>
-                            <span th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
-                        </div>
-                        <div>
-                            <label>Trudność:</label>
-                            <select th:field="*{rating}" required="true">
-                                <option value="1" >1</option>
-                                <option value="2" >2</option>
-                                <option value="3" >3</option>
-                                <option value="4" >4</option>
-                                <option value="5" >5</option>
-                            </select>
-                        </div>
-                        <input type="hidden" name="subjectId" th:value="${subject.id}"/>
-                        <button type="submit" >Dodaj</button>
-                        <span th:if="${param.opinionCreateOk}">Udało się dodać opinię.</span>
-                        <span th:if="${param.opinionCreateError}">Nie udało się dodać opinii.</span>
-                        <span th:if="${param.opinionDeleteOk}">Opinia usunięta pomyślnie.</span>
-                    </fieldset>
-                </form>-->
             </div>
 
             <ul class="faculties">
@@ -110,29 +91,12 @@
                     </div>
                 </li>
             </ul>
-
-            <!--
-            <div th:each="opinion : ${subject.opinions}">
-                <div>
-                    <h3 th:text="${'Difficulty: '+opinion.rating}"></h3>
-                    <p th:text="${opinion.comment}"></p>
-                    <div th:if="${opinion.username==currentUser.getUsername()}">
-                        <form th:action="@{/subject/__${subject.id}__/opinion/delete}" method="POST" >
-                            <input type="hidden" name="opinionId" th:value="${opinion.id}"/>
-                            <button type="submit">Usuń</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-            -->
         </div>
 
-        <div id="notes">
-
+        <div id="books" role="tabpanel" class="tab-pane">
             <form class="form-horizontal" method="POST" enctype="multipart/form-data"
                   th:action="@{/subject/__${subject.id}__/note/upload}">
                 <fieldset>
-                    <!-- File Button -->
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="file">Plik</label>
                         <div class="col-md-4">
@@ -142,34 +106,14 @@
                             <span th:if="${param.fileUploadNameTaken}" class="error-block">Plik o podanej nazwie już istnieje.</span>
                         </div>
                     </div>
-                    <!-- Button -->
                     <div class="form-group">
                         <label class="col-md-4 control-label" for="upload"></label>
                         <div class="col-md-4">
                             <button id="upload" name="upload" class="btn btn-primary">Prześlij</button>
                         </div>
                     </div>
-
                 </fieldset>
             </form>
-
-
-            <!--
-            <h3>Prześlij</h3>
-            <form method="POST" enctype="multipart/form-data"
-                  th:action="@{/subject/__${subject.id}__/note/upload}">
-                <div>
-                    <input id="file" type="file" name="file" />
-                </div>
-                <div>
-                    <input type="submit" value="Upload"/>
-                </div>
-                <span th:if="${param.fileUploadOk}">Plik przesłany pomyślnie.</span>
-                <span th:if="${param.fileUploadError}">Nie udało się przesłać pliku.</span>
-                <span th:if="${param.fileUploadNameTaken}">Plik o podanej nazwie już istnieje.</span>
-            </form>
-
-            -->
             <h3>Pliki</h3>
             <ul class="faculties">
                 <li th:each="note : ${subject.notes}" >
@@ -178,7 +122,7 @@
             </ul>
         </div>
 
-        <div id="teachers">
+        <div id="teachers" role="tabpanel" class="tab-pane">
             <ul class="faculties">
                 <li th:each="teacher : ${subject.teachers}" >
                     <a th:href="@{/teacher/__${teacher.id}__}" th:text="${teacher.firstName+' '+teacher.lastName}"></a>
@@ -186,7 +130,7 @@
             </ul>
         </div>
 
-        <div id="books">
+        <div id="books" role="tabpanel" class="tab-pane">
             <div>
 
                 <form class="form-horizontal" method="post" th:action="@{/subject/__${subject.id}__/book/create}" th:object="${bookCreateForm}">
@@ -227,13 +171,12 @@
         </div>
     </div>
 
+
+    <!--
     <script type="text/javascript" th:inline="javascript">
         $(document).ready(function() {
             /*<![CDATA[*/
             var tab = /*[[${tab}]]*/ '';
-
-
-
             $("[data-action='toggle']").click(function(event) {
                 var elements = $("[data-action='toggle']");
                 var current = $(event.target);
@@ -249,116 +192,6 @@
             /*]]>*/
         });
     </script>
-
+    -->
 </div>
 </html>
-
-    <!--
-
-    <div class="mainBox">
-        <div>
-            <h1 th:text="${subject.name}">Name</h1>
-            <h2 th:text="${subject.description}">Description</h2>
-            <h2 th:text="${'Average difficulty: '+#numbers.formatDecimal(avgDiff, 0, 2)}">Average difficulty: 5.0</h2>
-        </div>
-
-
-
-        <div>
-            <h2>Opinions</h2>
-            <div th:each="opinion : ${subject.opinions}">
-                <div>
-                    <h3 th:text="${'Difficulty: '+opinion.rating}"></h3>
-                    <p th:text="${opinion.comment}"></p>
-                    <div th:if="${opinion.username==currentUser.getUsername()}">
-                        <form th:action="@{/subject/__${subject.id}__/opinion/delete}" method="POST" >
-                            <input type="hidden" name="opinionId" th:value="${opinion.id}"/>
-                            <button type="submit">Delete</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-
-        <div th:if="${opinion==null}">
-            <form th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
-                <fieldset>
-                    <legend>Add opinion</legend>
-                    <div>
-                        <label>Comment:</label>
-                        <input type="text" th:field="*{comment}" required="true"/>
-                        <span th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
-                    </div>
-                    <div>
-                        <label>Difficulty:</label>
-                        <select th:field="*{rating}" required="true">
-                            <option value="1" >1</option>
-                            <option value="2" >2</option>
-                            <option value="3" >3</option>
-                            <option value="4" >4</option>
-                            <option value="5" >5</option>
-                        </select>
-                    </div>
-                    <input type="hidden" name="subjectId" th:value="${subject.id}"/>
-                    <button type="submit" >Add</button>
-                    <span th:if="${param.opinionCreateOk}">Opinion added successfully.</span>
-                    <span th:if="${param.opinionCreateError}">Failed to add opinion.</span>
-                    <span th:if="${param.opinionDeleteOk}">Opinion removed successfully.</span>
-                </fieldset>
-            </form>
-        </div>
-
-        <div>
-            <h2>Notes</h2>
-            <h3>Upload</h3>
-            <form method="POST" enctype="multipart/form-data"
-                  th:action="@{/subject/__${subject.id}__/note/upload}">
-                <div>
-                    <input id="file" type="file" name="file" />
-                </div>
-                <div>
-                    <input type="submit" value="Upload"/>
-                </div>
-                <span th:if="${param.fileUploadOk}">File uploaded successfully.</span>
-                <span th:if="${param.fileUploadError}">Failed to upload file.</span>
-                <span th:if="${param.fileUploadNameTaken}">File with that name already exists.</span>
-            </form>
-
-
-            <h3>List:</h3>
-            <div th:each="note : ${subject.notes}">
-                <a th:href="@{/res/__${note.path}__}" th:text="${note.name}"></a>
-            </div>
-        </div>
-
-        <div>
-            <h2>Recommended books</h2>
-            <div>
-                <div th:each="book : ${books}">
-                    <p th:text="${book.title+' by '+book.author + ' - '+book.recommended + ' times'}"/>
-                </div>
-            </div>
-            <div>
-                <form method="post" th:action="@{/subject/__${subject.id}__/book/create}" th:object="${bookCreateForm}">
-                    <div>
-                        <label>Title:</label>
-                        <input type="text" th:field="*{title}"/>
-                        <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
-                    </div>
-                    <div>
-                        <label>Author:</label>
-                        <input type="text" th:field="*{author}"/>
-                        <span th:if="${#fields.hasErrors('author')}" th:errors="*{author}"></span>
-                    </div>
-                    <span th:if="${param.bookCreateOk}">Book added successfully.</span>
-                    <span th:if="${param.bookCreateInvalid}">Failed to add book.</span>
-                    <span th:if="${param.bookCreateExists}">Book already exists.</span>
-                    <button type="submit">Add</button>
-                </form>
-            </div>
-        </div>
-
-    </div>
-
--->
