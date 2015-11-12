@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <link rel="stylesheet" type="text/css" href="/static/css/css.css" th:href="@{/css/css.css}"/>
+</head>
+<body>
+
+<div th:fragment="fragment">
+    <div class="mainBox">
+        <div>
+            <h1 th:text="${teacher.firstName+' '+teacher.lastName}"></h1>
+            <h2 th:text="${teacher.description}"></h2>
+        </div>
+
+        <div>
+            <h2>Naucza:</h2>
+            <div th:each="subject : ${teacher.subjects}">
+                <a th:href="@{/subject/__${subject.id}__}" th:text="${subject.name}"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+</html>

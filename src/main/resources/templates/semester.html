@@ -1,30 +1,39 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<div th:fragment="fragment">
-    <nav>
-        <div class="nav-wrapper teal">
-            <a class="brand-logo right" th:text="${'Semestr '+semester.number}"></a>
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
-                <li><a th:href="@{/}">Strona główna</a></li>
-                <li><a th:href="@{/faculty/__${semester.major.faculty.id}__}" th:text="${semester.major.faculty.name}"></a></li>
-                <li><a th:href="@{/major/__${semester.major.id}__}" th:text="${semester.major.name}"></a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
+﻿<div th:fragment="fragment">
+	<nav>
+		<div class="container nav-wrapper">
+			<a class="brand-logo" th:text="${'Semestr '+semester.number}"></a>
+			<ul class="right ">
+				<li><a th:href="@{/}">Strona główna</a></li>
+				<li><a th:href="@{/faculty/__${semester.major.faculty.id}__}" th:text="${semester.major.faculty.name}">Nazwa wydziału</a></li>
+				<li><a th:href="@{/major/__${semester.major.id}__}" th:text="${semester.major.name}">Nazwa kierunku</a></li>
+			</ul>
+		</div>
+	</nav>
+				
+	<div class="container">
+		<div class="section">
+		
+			<div class="row marg-top-20">
+			
+				<div class="col s8 offset-s2">
+				
+					<div class="row no-marg-bottom">
+						<nav>
+						  <div class="nav-wrapper">
+							<a class="brand-logo center">Wybierz przedmiot</a>
+						  </div>
+						</nav>
+					</div>
+					<div class="row card-panel hoverable no-marg-top">
+						<div class="collection">
+							<a th:each="subject : ${semester.subjects}" th:href="@{/subject/__${subject.id}__}" th:text="${subject.name}" class="collection-item">Nazwa przedmiotu</a>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
 
-        <div class="col s12">
-            <div class="row">
-                <div class="center-align card-panel teal">
-                    <h5 class="white-text">Wybierz przedmiot</h5>
-                </div>
-                <div class="col s12">
-                    <div class="collection">
-                        <a th:each="subject : ${semester.subjects}" th:text="${subject.name}" th:href="@{/subject/__${subject.id}__}" class="collection-item"></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-</html>

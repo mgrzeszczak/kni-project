@@ -32,10 +32,10 @@ public class ResourceConfig extends WebMvcConfigurerAdapter {
 
     @Bean
     public EmbeddedServletContainerCustomizer containerCustomizer() {
-        return container -> container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/html/errors//404.html"),
-                                                    new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/html/errors/500.html"),
-                                                    new ErrorPage(HttpStatus.BAD_REQUEST, "/html/errors/400.html"),
-                                                    new ErrorPage(HttpStatus.FORBIDDEN, "/html/errors/403.html"),
+        return container -> container.addErrorPages(new ErrorPage(HttpStatus.NOT_FOUND, "/404"),
+                                                    new ErrorPage(HttpStatus.INTERNAL_SERVER_ERROR, "/500"),
+                                                    new ErrorPage(HttpStatus.BAD_REQUEST, "/400"),
+                                                    new ErrorPage(HttpStatus.FORBIDDEN,"/404"),
                                                     new ErrorPage(MultipartException.class,"/html/errors/500.html"));
     }
 

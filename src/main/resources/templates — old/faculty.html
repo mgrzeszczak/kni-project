@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<div th:fragment="fragment">
+    <nav>
+        <div class="nav-wrapper teal">
+            <a class="brand-logo right" th:text="${faculty.name}"></a>
+            <ul id="nav-mobile" class="left hide-on-med-and-down">
+                <li><a th:href="@{/}">Strona główna</a></li>
+            </ul>
+        </div>
+    </nav>
+    <div class="container">
+
+        <div class="col s12">
+            <div class="row">
+                <div class="center-align card-panel teal">
+                    <h5 class="white-text">Wybierz kierunek</h5>
+                </div>
+                <div class="col s12">
+                    <div class="collection">
+                        <a th:each="major : ${faculty.majors}" th:text="${major.name}" th:href="@{/major/__${major.id}__}" class="collection-item"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</html>

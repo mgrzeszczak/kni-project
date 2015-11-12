@@ -1,0 +1,42 @@
+<div th:fragment="subject-books" class="col s12">
+    <div class="container">
+        <div class="section">
+            <div class="row marg-top-20">
+                <div class="col s12">
+                    <div class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Dodaj książkę</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form class="col s12" method="post" th:action="@{/subject/__${subject.id}__/book/create}" th:object="${bookCreateForm}">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="author" type="text" name="author" th:field="*{author}" required=""/>
+                                    <label for="author">Autor</label>
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('author')}" th:errors="*{author}" class="section center-align error-block"></div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="title" type="text" th:field="*{title}" name="title" required=""/>
+                                    <label for="title">Tytuł</label>
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="section center-align error-block"></div>
+                            <div th:if="${param.bookCreateOk}" class="section center-align success-block">Udało się dodać książkę.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Dodaj książkę</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div th:each="book: ${subject.books}" class="card-panel hoverable" th:text="${book.title+' - '+book.author}"></div>
+    </div>
+</div>

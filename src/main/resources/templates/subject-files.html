@@ -1,0 +1,46 @@
+<div th:fragment="subject-files" class="col s12">
+    <div class="container">
+        <div class="section">
+
+            <div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a href="#!" class="brand-logo center">Prześlij plik</a>
+                            </div>
+                        </nav>
+
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form class="col s12" method="POST" enctype="multipart/form-data"
+                              th:action="@{/subject/__${subject.id}__/note/upload}">
+                            <div class="file-field input-field">
+                                <div class="btn">
+                                    <span>Plik</span>
+                                    <input name="file" type="file"/>
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path" type="text"/>
+                                </div>
+                            </div>
+                            <div th:if="${param.fileUploadOk}" class="section center-align success-block">Plik przesłany pomyślnie.</div>
+                            <div th:if="${param.fileUploadError}" class="section center-align success-block">Nie udało się przesłać pliku.</div>
+                            <div th:if="${param.fileUploadNameTaken}" class="section center-align success-block">Plik o podanej nazwie już istnieje.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Prześlij plik</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="collection" th:if="${subject.notes.size()!=0}">
+        <a th:each="note:${subject.notes}" th:href="@{/res/__${note.path}__}" class="collection-item" th:text="${note.name}">Alvin</a>
+    </div>
+
+</div>

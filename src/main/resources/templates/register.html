@@ -1,37 +1,45 @@
-<html xmlns:th="http://www.w3.org/1999/xhtml"> 
-<div th:fragment="fragment">
-	<div class="row container">
-		<h2 class="header">Rejestracja</h2>
-	</div>
-	  <div class="row container">
-		<form class="col s8" th:action="@{/register}" th:object="${userCreateForm}" method="post">
-			<div class="row">
-				<div class="input-field col s8">
-					<input th:field="*{email}" id="email" type="email" class="validate" required=""/>
-					<label for="email">E-mail</label>
-					<span class="error-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">E-mail error</span>
+﻿<div th:fragment="fragment">
+	<div class="container">
+			<div class="section">
+				<div class="row marg-top-20">
+					<div class="col s8 offset-s2">
+						<div class="row no-marg-bottom">
+							<nav>
+							  <div class="nav-wrapper">
+								<a class="brand-logo center">Rejestracja</a>
+							  </div>
+							</nav>
+						</div>
+						<div class="row card-panel hoverable no-marg-top">
+							<form class="col s12" method="post" th:action="@{/register}" th:object="${userCreateForm}">
+								<div class="row">
+									<div class="input-field col s12">
+										<input th:field="*{email}" id="email" type="email" name="email" required="required"/>
+										<label for="email">E-mail</label>
+										<span class="error-block" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Register error</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="input-field col s12">
+										<input th:field="*{password}" id="password" type="password" name="password" required="required"/>
+										<label for="password">Hasło</label>
+										<span class="error-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Register error</span>
+									</div>
+								</div>
+								<div class="row">
+									<div class="input-field col s12">
+										<input th:field="*{passwordRepeated}" id="passwordRepeated" type="password" name="passwordRepeated" required="required"></input>
+										<label for="passwordRepeated">Powtórz hasło</label>
+										<span class="error-block" th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}">Register error</span>
+									</div>
+								</div>
+								<div class="row center">
+									<button type="submit" class="waves-effect waves-light btn">Zarejestruj się</button>
+								</div>
+							</form>
+						</div>
+					</div>
 				</div>
 			</div>
-			<div class="row">
-				<div class="input-field col s8">
-					<input th:field="*{password}" id="password" type="password" class="validate" required=""/>
-					<label for="password">Hasło</label>
-					<span class="error-block" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password error</span>
-				</div>
-			</div>
-			<div class="row">
-				<div class="input-field col s8">
-					<input th:field="*{passwordRepeated}" id="passwordRepeated" type="password" class="validate" required=""/>
-					<label for="passwordRepeated">Powtórz hasło</label>
-					<span class="error-block" th:if="${#fields.hasErrors('passwordRepeated')}" th:errors="*{passwordRepeated}">Passwords do not match</span>
-				</div>
-			</div>
-			<div class="row">
-				<div class="col s3">
-					<button type="submit" class="waves-effect waves-light btn">Zarejestruj się</button>
-				</div>
-			</div>
-		</form>
-	  </div>
+		</div>
 </div>
-</html>

@@ -1,29 +1,38 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<div th:fragment="fragment">
-    <nav>
-        <div class="nav-wrapper teal">
-            <a class="brand-logo right" th:text="${major.name}"></a>
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
-                <li><a th:href="@{/}">Strona główna</a></li>
-                <li><a th:href="@{/faculty/__${major.faculty.id}__}" th:text="${major.faculty.name}"></a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
+﻿<div th:fragment="fragment">
+	<nav>
+		<div class="container nav-wrapper">
+			<a class="brand-logo" th:text="${major.name}"></a>
+			<ul class="right ">
+				<li><a th:href="@{/}">Strona główna</a></li>
+				<li><a th:href="@{/faculty/__${major.faculty.id}__}" th:text="${major.faculty.name}">Nazwa wydziału</a></li>
+			</ul>
+		</div>
+	</nav>
+				
+	<div class="container">
+		<div class="section">
+		
+			<div class="row marg-top-20">
+			
+				<div class="col s8 offset-s2">
+				
+					<div class="row no-marg-bottom">
+						<nav>
+						  <div class="nav-wrapper">
+							<a class="brand-logo center">Wybierz semestr</a>
+						  </div>
+						</nav>
+					</div>
+					<div class="row card-panel hoverable no-marg-top">
+						<div class="collection">
+							<a th:each="semester : ${major.semesters}" th:href="@{/semester/__${semester.id}__}" th:text="${'Semestr '+semester.number}" class="collection-item">Nazwa semestru</a>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
 
-        <div class="col s12">
-            <div class="row">
-                <div class="center-align card-panel teal">
-                    <h5 class="white-text">Wybierz semestr</h5>
-                </div>
-                <div class="col s12">
-                    <div class="collection">
-                        <a th:each="semester : ${major.semesters}" th:text="${'Semestr '+semester.number}" th:href="@{/semester/__${semester.id}__}" class="collection-item"></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-</html>

@@ -1,0 +1,78 @@
+<div th:fragment="subject-opinions" class="col s12">
+
+    <div class="container">
+        <div class="section">
+
+            <div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Dodaj opinię</a>
+                            </div>
+                        </nav>
+
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form class="col s12" th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
+                            <input type="hidden" name="subjectId" th:value="${subject.id}"/>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="title" th:field="*{title}" type="text" name="title" required=""/>
+                                    <label for="title">Tytuł</label>
+
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('title')}" th:errors="*{title}" class="section center-align error-block"></div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select id="rating" th:field="*{rating}" required="">
+                                        <option value="5">Bardzo trudny</option>
+                                        <option value="4">Trudny</option>
+                                        <option value="3">Przeciętny</option>
+                                        <option value="2">Łatwy</option>
+                                        <option value="1">Bardzo łatwy</option>
+                                    </select>
+                                    <label for="rating">Ocena</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <textarea id="content" th:field="*{comment}" class="materialize-textarea" required=""></textarea>
+                                    <label for="content">Treść</label>
+
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}" class="section center-align error-block"></div>
+                            <div th:if="${param.opinionCreateOk}" class="section center-align success-block">Udało się dodać opinię.</div>
+                            <div th:if="${param.opinionCreateError}" class="section center-align error-block">Nie udało się dodać opinii.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Dodaj opinię</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+
+
+
+
+    <div class="row">
+        <div class="card-panel hoverable" th:each="opinion:${subject.opinions}">
+            <div class="section">
+                <h5 th:text="${opinion.title}">Tytuł</h5>
+                <h6 th:text="${opinion.rating}">Rating</h6>
+            </div>
+            <div class="divider"></div>
+            <div class="section">
+                <p th:text="${opinion.comment}">Opinion</p>
+            </div>
+        </div>
+    </div>
+</div>

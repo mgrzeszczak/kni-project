@@ -1,28 +1,37 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<div th:fragment="fragment">
-    <nav>
-        <div class="nav-wrapper teal">
-            <a class="brand-logo right" th:text="${faculty.name}"></a>
-            <ul id="nav-mobile" class="left hide-on-med-and-down">
-                <li><a th:href="@{/}">Strona główna</a></li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
+﻿<div th:fragment="fragment">
+	<nav>
+		<div class="container nav-wrapper">
+			<a class="brand-logo" th:text="${faculty.name}"></a>
+			<ul class="right ">
+				<li><a th:href="@{/}">Strona główna</a></li>
+			</ul>
+		</div>
+	</nav>
+				
+	<div class="container">
+		<div class="section">
+		
+			<div class="row marg-top-20">
+			
+				<div class="col s8 offset-s2">
+				
+					<div class="row no-marg-bottom">
+						<nav>
+						  <div class="nav-wrapper">
+							<a class="brand-logo center">Wybierz kierunek</a>
+						  </div>
+						</nav>
+					</div>
+					<div class="row card-panel hoverable no-marg-top">
+						<div class="collection">
+							<a th:each="major : ${faculty.majors}" th:href="@{/major/__${major.id}__}" th:text="${major.name}" class="collection-item">Nazwa kierunku</a>
+						</div>
+					</div>
+				</div>
+				
+			</div>
+			
+		</div>
+	</div>
 
-        <div class="col s12">
-            <div class="row">
-                <div class="center-align card-panel teal">
-                    <h5 class="white-text">Wybierz kierunek</h5>
-                </div>
-                <div class="col s12">
-                    <div class="collection">
-                        <a th:each="major : ${faculty.majors}" th:text="${major.name}" th:href="@{/major/__${major.id}__}" class="collection-item"></a>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
-</html>

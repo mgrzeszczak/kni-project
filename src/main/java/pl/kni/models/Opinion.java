@@ -14,6 +14,7 @@ public class Opinion {
     @GeneratedValue
     private long id;
     private String comment;
+    private String title;
     private int rating;
 
     private String username;
@@ -24,6 +25,7 @@ public class Opinion {
     public Opinion(OpinionCreateForm opinionCreateForm, Subject subject) {
         this.comment = opinionCreateForm.getComment();
         this.rating = opinionCreateForm.getRating();
+        this.title = opinionCreateForm.getTitle();
         this.subject= subject;
     }
 
@@ -67,5 +69,13 @@ public class Opinion {
 
     public void setRating(int rating) {
         this.rating = rating;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

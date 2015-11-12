@@ -1,0 +1,27 @@
+
+footer.page-footer {
+	margin-top: 0 !important;
+}
+
+.no-marg-top{
+	margin-top: 0 !important;
+}
+.no-marg-bottom{
+	margin-bottom: 0 !important;
+}
+
+.marg-top-20 {
+	margin-top: 20px;
+}
+
+.marg-top-200{
+	margin-top: 200px;
+}
+
+.shadow-text{
+	text-shadow: 1px 1px 1px #000;
+}
+
+.error-block{
+	color: red;
+}

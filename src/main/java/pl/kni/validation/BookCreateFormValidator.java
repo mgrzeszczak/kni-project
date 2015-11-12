@@ -30,6 +30,6 @@ public class BookCreateFormValidator implements Validator {
     }
 
     private void checkIfExists(BookCreateForm form,  Errors errors){
-        if (bookService.checkIfExists(form.getTitle(),form.getAuthor())!=null) errors.reject("exists");
+        if (bookService.checkIfExists(form.getTitle(),form.getAuthor())!=null) errors.rejectValue("title","title_exists","This book already exists.");
     }
 }

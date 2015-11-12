@@ -1,197 +1,51 @@
-<!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
-<div th:fragment="fragment">
+﻿<div th:fragment="fragment">
+<nav>
+						<div class="container nav-wrapper">
+							<a href="#" class="brand-logo" th:text="${subject.name}">Nazwa przedmiotu</a>
+							<ul class="right ">
+								<li><a th:href="@{/}">Strona główna</a></li>
+								<li><a th:href="@{/faculty/__${subject.semester.major.faculty.id}__}" th:text="${subject.semester.major.faculty.name}">Nazwa wydziału</a></li>
+								<li><a th:href="@{/major/__${subject.semester.major.id}__}" th:text="${subject.semester.major.name}">Nazwa kierunku</a></li>
+								<li><a th:href="@{/semester/__${subject.semester.id}__}" th:text="${'Semestr '+subject.semester.number}">Nazwa semestru</a></li>
+							</ul>
+						</div>
+					</nav>
+				
+				<div class="container">
+					<div class="section">
+					
+						<div class="row marg-top-20">
+						
+							<div class="col s8 offset-s2">
+							
+								<div class="row card-panel hoverable no-marg-top">
 
-    <section class="header-breadcrumbs">
-        <a th:href="@{/}">Strona główna</a> /
-        <a th:href="@{/faculty/__${subject.semester.major.faculty.id}__}" th:text="${subject.semester.major.faculty.name}"></a> /
-        <a th:href="@{/major/__${subject.semester.major.id}__}" th:text="${subject.semester.major.name}"></a> /
-        <a th:href="@{/semester/__${subject.semester.id}__}" th:text="${'Semestr '+subject.semester.number}"></a>
-    </section>
-
-    <div class="mainBox">
-        <div>
-            <h1 th:text="${subject.name}">Algebra liniowa</h1>
-        </div>
-
-        <ul class="nav nav-pills" role="tablist">
-            <li role="presentation" class="active">
-                <a href="#description" aria-controls="description" role="tab" data-toggle="tab">Opis</a>
-            </li>
-            <li role="presentation">
-                <a href="#opinions" aria-controls="opinions" role="tab" data-toggle="tab">Opinie</a>
-            </li>
-            <li role="presentation">
-                <a href="#files" aria-controls="files" role="tab" data-toggle="tab">Pliki</a>
-            </li>
-            <li role="presentation">
-                <a href="#books" aria-controls="books" role="tab" data-toggle="tab">Książki</a>
-            </li>
-            <li role="presentation">
-                <a href="#teachers" aria-controls="teachers" role="tab" data-toggle="tab">Nauczyciele</a>
-            </li>
-        </ul>
-
-        <div id="description" role="tabpanel" class="tab-pane">
-            <p th:text="${subject.description}"></p>
-        </div>
-
-        <div id="opinions" role="tabpanel" class="tab-pane">
-            <div th:if="${opinion==null}">
-                <form class="form-horizontal" th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
-                    <fieldset>
-                        <!-- Textarea -->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="textarea">Treść</label>
-                            <div class="col-md-4">
-                                <textarea class="form-control" id="textarea" name="textarea" th:field="*{comment}" required="true">Super przedmiot!</textarea>
-                                <span th:if="${#fields.hasErrors('comment')}" th:errors="*{comment}"></span>
-                            </div>
-                        </div>
-
-                        <!-- Select Basic -->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="">Trudność</label>
-                            <div class="col-md-4">
-                                <select th:field="*{rating}" required="true" class="form-control">
-                                    <option value="1">1</option>
-                                    <option value="2">2</option>
-                                    <option value="3">3</option>
-                                    <option value="4">4</option>
-                                    <option value="5">5</option>
-                                </select>
-                                <span th:if="${param.opinionCreateOk}" class="success-block">Udało się dodać opinię.</span>
-                                <span th:if="${param.opinionCreateError}" class="error-block">Nie udało się dodać opinii.</span>
-                                <span th:if="${param.opinionDeleteOk}" class="success-block">Opinia usunięta pomyślnie.</span>
-                            </div>
-                        </div>
-                        <input type="hidden" name="subjectId" th:value="${subject.id}"/>
-                        <!-- Button -->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="createOpinion"></label>
-                            <div class="col-md-4">
-                                <button id="createOpinion" name="createOpinion" class="btn btn-primary">Dodaj</button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-
-            <ul class="faculties">
-                <li th:each="opinion : ${subject.opinions}">
-                    <div class="comment-box">
-                        <p th:text="${opinion.comment}"></p>
-                        <p th:text="${'Trudność: '+opinion.rating}"></p>
-                        <div th:if="${opinion.username==currentUser.getUsername()}">
-                            <form th:action="@{/subject/__${subject.id}__/opinion/delete}" method="POST" >
-                                <input type="hidden" name="opinionId" th:value="${opinion.id}"/>
-                                <button type="submit">Usuń</button>
-                            </form>
-                        </div>
-                    </div>
-                </li>
-            </ul>
-        </div>
-
-        <div id="books" role="tabpanel" class="tab-pane">
-            <form class="form-horizontal" method="POST" enctype="multipart/form-data"
-                  th:action="@{/subject/__${subject.id}__/note/upload}">
-                <fieldset>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="file">Plik</label>
-                        <div class="col-md-4">
-                            <input id="file" name="file" class="input-file" type="file"/>
-                            <span th:if="${param.fileUploadOk}" class="success-block">Plik przesłany pomyślnie.</span>
-                            <span th:if="${param.fileUploadError}" class="error-block">Nie udało się przesłać pliku.</span>
-                            <span th:if="${param.fileUploadNameTaken}" class="error-block">Plik o podanej nazwie już istnieje.</span>
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label class="col-md-4 control-label" for="upload"></label>
-                        <div class="col-md-4">
-                            <button id="upload" name="upload" class="btn btn-primary">Prześlij</button>
-                        </div>
-                    </div>
-                </fieldset>
-            </form>
-            <h3>Pliki</h3>
-            <ul class="faculties">
-                <li th:each="note : ${subject.notes}" >
-                    <a th:href="@{/res/__${note.path}__}" th:text="${note.name}"></a>
-                </li>
-            </ul>
-        </div>
-
-        <div id="teachers" role="tabpanel" class="tab-pane">
-            <ul class="faculties">
-                <li th:each="teacher : ${subject.teachers}" >
-                    <a th:href="@{/teacher/__${teacher.id}__}" th:text="${teacher.firstName+' '+teacher.lastName}"></a>
-                </li>
-            </ul>
-        </div>
-
-        <div id="books" role="tabpanel" class="tab-pane">
-            <div>
-
-                <form class="form-horizontal" method="post" th:action="@{/subject/__${subject.id}__/book/create}" th:object="${bookCreateForm}">
-                    <fieldset>
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="title">Tytuł</label>
-                            <div class="col-md-4">
-                                <input id="title" name="title" th:field="*{title}" placeholder="Tytuł" class="form-control input-md" required="" type="text"/>
-                                <span class="error-block" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">help</span>
-                            </div>
-                        </div>
-
-                        <!-- Text input-->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="author">Autor</label>
-                            <div class="col-md-4">
-                                <input id="author" name="author" th:field="*{author}" placeholder="Autor" class="form-control input-md" required="" type="text"/>
-                                <span class="error-block" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">help</span>
-                            </div>
-                        </div>
-
-                        <!-- Button -->
-                        <div class="form-group">
-                            <label class="col-md-4 control-label" for="addBook"></label>
-                            <div class="col-md-4">
-                                <button id="addBook" name="addBook" class="btn btn-primary">Poleć</button>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
-            </div>
-
-            <h3>Polecana literatura</h3>
-            <ul class="faculties">
-                <li  th:each="book : ${books}" th:text="${book.title + ' - ' + book.author}"></li>
-            </ul>
-        </div>
-    </div>
-
-
-    <!--
-    <script type="text/javascript" th:inline="javascript">
-        $(document).ready(function() {
-            /*<![CDATA[*/
-            var tab = /*[[${tab}]]*/ '';
-            $("[data-action='toggle']").click(function(event) {
-                var elements = $("[data-action='toggle']");
-                var current = $(event.target);
-                for(var i=0; i< elements.length; i++) {
-                    var id = $(elements[i]).attr('data-target');
-                    $('#' + id).hide();
-                    $(elements[i]).removeClass('active');
-                }
-                id = current.attr('data-target');
-                $('#' + id).show();
-                current.addClass('active');
-            });
-            /*]]>*/
-        });
-    </script>
-    -->
+									<div class="col s12">
+										<div class="row">
+											<ul class="tabs">
+												<li class="tab"><a href="#description">Opis</a></li>
+												<li class="tab"><a href="#teachers">Nauczyciele</a></li>
+												<li class="tab"><a href="#opinions">Opinie</a></li>
+												<li class="tab"><a href="#books">Literatura</a></li>
+												<li class="tab"><a href="#files">Pliki</a></li>
+											</ul>
+										</div>
+										
+										<div class="section">
+											<div id="description" class="col s12" th:text="${subject.description}">
+											</div>
+											<div id="teachers" class="col s12">To be added.</div>
+											<div id="books" th:include="subject-books::subject-books">
+											</div>
+											<div id="opinions" th:include="subject-opinions::subject-opinions">
+											</div>
+											<div id="files" th:include="subject-files::subject-files">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 </div>
-</html>

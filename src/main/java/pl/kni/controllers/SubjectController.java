@@ -10,6 +10,7 @@ import org.springframework.security.web.bind.support.AuthenticationPrincipalArgu
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MaxUploadSizeExceededException;
@@ -78,19 +79,25 @@ public class SubjectController {
                           BookCreateForm bookCreateForm,
                           Authentication authentication) throws SubjectNotFoundException{
         setModel(model, id, authentication);
-        model.addAttribute("tab","books");
+        model.addAttribute("tab", "books");
         return "index";
     }
 
     @RequestMapping(value = "/{id}/opinion/create",method = RequestMethod.POST)
     public String createOpinion(@Valid @ModelAttribute("opinionCreateForm") OpinionCreateForm opinionCreateForm, BookCreateForm bookCreateForm,
                                 BindingResult result, @PathVariable long id, Authentication authentication, Model model) throws SubjectNotFoundException{
+
+        System.out.println(opinionCreateForm.getComment());
+
         if (result.hasErrors()) {
+            for (ObjectError error : result.getAllErrors()){
+                System.out.println(error.getDefaultMessage());
+            }
             setModel(model,id,authentication);
-            return "subject";
+            return "index";
         }
         opinionService.add(opinionCreateForm, authentication.getName());
-        return "redirect:/subject/"+String.valueOf(id)+"?opinionCreateOk";
+        return "redirect:/subject/"+String.valueOf(id)+"?opinionCreateOk#opinions";
     }
 
     @RequestMapping(value = "/{id}/opinion/delete",method = RequestMethod.POST)
@@ -102,27 +109,36 @@ public class SubjectController {
     @RequestMapping(value = "/{id}/note/upload",method = RequestMethod.POST)
     public String uploadNote(@RequestParam("file") MultipartFile file,
                              @PathVariable long id) throws MaxUploadSizeExceededException{
-        if (file.isEmpty()) return "redirect:/subject/"+id+"?fileUploadError";
+        if (file.isEmpty()) return "redirect:/subject/"+id+"?fileUploadError#files";
         try {
             noteService.create(file.getOriginalFilename(), id, file);
         } catch (NoteCreationFailedException e) {
             if (e.cause()== NoteCreationFailedException.Cause.NAME_TAKEN)
-            return "redirect:/subject/"+id+"?fileUploadNameTaken";
-            else return "redirect:/subject/"+id+"?fileUploadError";
+            return "redirect:/subject/"+id+"?fileUploadNameTaken#files";
+            else return "redirect:/subject/"+id+"?fileUploadError#files";
         }
-        return "redirect:/subject/"+id+"?fileUploadOk";
+        return "redirect:/subject/"+id+"?fileUploadOk#files";
     }
 
     @RequestMapping(value = "/{id}/book/create",method = RequestMethod.POST)
     public String createBook(@Valid @ModelAttribute("bookCreateForm")BookCreateForm bookCreateForm,
-                             BindingResult result,
+                             BindingResult result,OpinionCreateForm opinionCreateForm,
                              @PathVariable long id, Model model, Authentication authentication) throws SubjectNotFoundException {
+
+        System.out.println(bookCreateForm.getAuthor());
+        System.out.println(bookCreateForm.getTitle());
+
         if (result.hasErrors()) {
-            setModel(model,id,authentication);
-            return "subject";
+            for (ObjectError error :result.getAllErrors()){
+                System.out.println(error.getDefaultMessage());
+            }
+            setModel(model, id, authentication);
+            model.addAttribute("book-tab","book-tab");
+            return "index";
         }
+        System.out.println("After if");
         bookService.create(bookCreateForm, id);
-        return "redirect:/subject/"+id+"?bookCreateOk";
+        return "redirect:/subject/"+id+"?bookCreateOk#books";
     }
 
     private void setModel(Model model, long subjectId, Authentication authentication) throws SubjectNotFoundException{
