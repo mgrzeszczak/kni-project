@@ -94,6 +94,7 @@ public class SubjectController {
                 System.out.println(error.getDefaultMessage());
             }
             setModel(model,id,authentication);
+            model.addAttribute("opinionsTab",true);
             return "index";
         }
         opinionService.add(opinionCreateForm, authentication.getName());
@@ -103,7 +104,7 @@ public class SubjectController {
     @RequestMapping(value = "/{id}/opinion/delete",method = RequestMethod.POST)
     public String removeOpinion(@RequestParam("opinionId") long opinionId, @PathVariable long id) throws SubjectNotFoundException, OpinionNotFoundException{
         opinionService.remove(opinionId);
-        return "redirect:/subject/"+id+"?opinionDeleteOk";
+        return "redirect:/subject/"+id+"#opinions";
     }
 
     @RequestMapping(value = "/{id}/note/upload",method = RequestMethod.POST)
@@ -133,7 +134,7 @@ public class SubjectController {
                 System.out.println(error.getDefaultMessage());
             }
             setModel(model, id, authentication);
-            model.addAttribute("book-tab","book-tab");
+            model.addAttribute("booksTab",true);
             return "index";
         }
         System.out.println("After if");

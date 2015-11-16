@@ -27,9 +27,26 @@
 							</div>
 							<div th:if="${param.error}" class="row">
 								<div class="section center-align error-block">
-									Niepoprawny e-mail lub hasło.
+									Niepoprawny e-mail lub hasło lub konto nie zostało aktywowane.
 								</div>
 							</div>
+							<div th:if="${param.confirmEmail}" class="row">
+								<div class="section center-align success-block">
+									Na Twój e-mail został wysłany link aktywujący konto.
+								</div>
+							</div>
+							<div th:if="${param.confirmationFail}" class="row">
+								<div class="section center-align error-block">
+									Niepoprawne dane lub termin aktywacji minął. Zarejestruj się jeszcze raz.
+								</div>
+							</div>
+							<div th:if="${param.confirmationSuccess}" class="row">
+								<div class="section center-align success-block">
+									Konto zostało aktywowane.
+								</div>
+							</div>
+
+
 							<div class="row">
 								<div class="col s6">
 									<div class="row center">

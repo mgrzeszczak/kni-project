@@ -1,13 +1,13 @@
 <div th:fragment="subject-opinions" class="col s12">
 
-    <div class="container">
+    <div th:if="${opinion==null}" class="container">
         <div class="section">
 
             <div class="row marg-top-20">
 
                 <div class="col s12">
 
-                    <div class="row no-marg-bottom">
+                    <div  class="row no-marg-bottom">
                         <nav>
                             <div class="nav-wrapper">
                                 <a class="brand-logo center">Dodaj opinię</a>
@@ -16,7 +16,7 @@
 
                     </div>
                     <div class="row card-panel hoverable no-marg-top">
-                        <form class="col s12" th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
+                        <form  class="col s12" th:action="@{/subject/__${subject.id}__/opinion/create}" method="post" th:object="${opinionCreateForm}">
                             <input type="hidden" name="subjectId" th:value="${subject.id}"/>
                             <div class="row">
                                 <div class="input-field col s12">
@@ -63,8 +63,9 @@
 
 
 
+
     <div class="row">
-        <div class="card-panel hoverable" th:each="opinion:${subject.opinions}">
+        <div class="card-panel hoverable" th:if="${opinion}" >
             <div class="section">
                 <h5 th:text="${opinion.title}">Tytuł</h5>
                 <h6 th:text="${opinion.rating}">Rating</h6>
@@ -72,6 +73,22 @@
             <div class="divider"></div>
             <div class="section">
                 <p th:text="${opinion.comment}">Opinion</p>
+            </div>
+            <div class="divider"></div>
+            <div class="section center">
+                <form th:action="@{/subject/__${subject.id}__/opinion/delete}" method="post"><input type="hidden" name="opinionId" th:value="${opinion.id}"/> <button type="submit" class="waves-effect waves-light btn">Usuń</button></form>
+            </div>
+        </div>
+
+
+        <div class="card-panel hoverable" th:each="op:${subject.opinions}" th:if="${opinion!=op}" >
+            <div class="section">
+                <h5 th:text="${op.title}">Tytuł</h5>
+                <h6 th:text="${op.rating}">Rating</h6>
+            </div>
+            <div class="divider"></div>
+            <div class="section">
+                <p th:text="${op.comment}">Opinion</p>
             </div>
         </div>
     </div>

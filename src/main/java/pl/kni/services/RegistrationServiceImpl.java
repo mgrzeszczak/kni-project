@@ -37,18 +37,12 @@ public class RegistrationServiceImpl implements RegistrationService {
 
     @Override
     public User confirm(String token, String email) {
-
-        System.out.println("\n\n\n\ntoken: "+token);
-        System.out.println("email: "+email+"\n\n\n\n");
-
         Registration registration = registrationRepository.findByEmailAndToken(email,token);
         if (registration == null) {
-            System.out.println("REGISTRATION IS NULL");
             return null;
         }
         if (!registration.isValid()){
             registrationRepository.delete(registration);
-            System.out.println("REGISTRATION NOT VALID");
             return null;
         }
         User user = userService.create(registration);
