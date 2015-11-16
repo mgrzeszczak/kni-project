@@ -2,6 +2,7 @@ package pl.kni.services;
 
 import pl.kni.exceptions.UserNotFoundException;
 import pl.kni.forms.UserCreateForm;
+import pl.kni.models.Registration;
 import pl.kni.models.User;
 
 import java.util.List;
@@ -15,5 +16,6 @@ public interface UserService {
     User findById(long id) throws UserNotFoundException;
     List<User> findAll();
     User create(UserCreateForm userCreateForm);
+    User create(Registration registration);
     boolean emailAvailable(String email);
 }

@@ -16,6 +16,8 @@ import pl.kni.services.FacultyService;
 import pl.kni.services.SemesterService;
 
 import javax.validation.Valid;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * Created by Maciej on 11.10.2015.

@@ -1,18 +1,18 @@
 package pl.kni.models;
 
-
+import com.fasterxml.jackson.databind.deser.std.StringArrayDeserializer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import pl.kni.forms.UserCreateForm;
 import pl.kni.security.Role;
 
-
 import javax.persistence.*;
+import java.util.Date;
 
 /**
- * Created by Maciej on 12.10.2015.
+ * Created by Maciej on 16.11.2015.
  */
 @Entity
-public class User {
+public class Registration {
 
     @Id
     @GeneratedValue
@@ -23,29 +23,38 @@ public class User {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    // TODO: email activation
-    //private boolean activated;
-    //private String activationToken;
+    private String token;
+    @Temporal(TemporalType.DATE)
+    private Date date;
+    @Temporal(TemporalType.DATE)
+    private Date expires;
 
-    public User(UserCreateForm form) {
+    public Registration(UserCreateForm form) {
         email = form.getEmail();
         password = new BCryptPasswordEncoder().encode(form.getPassword());
         role = form.getRole();
+        date = new Date();
+        expires = new Date(date.getTime()+7*24*60*60*1000);
+        System.out.println(date.toString()+"\n"+expires.toString());
     }
 
-    public User(String email, String password, Role role) {
-        this.email = email;
-        this.password = password;
-        this.role = role;
+    public Registration() {
     }
 
-    public User(Registration registration) {
-        this.email = registration.getEmail();
-        this.password = registration.getPassword();
-        this.role = registration.getRole();
+    public String getToken() {
+        return token;
     }
 
-    public User() {
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
+    public void setDate(Date date) {
+        this.date = date;
     }
 
     public long getId() {
@@ -78,5 +87,10 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    public boolean isValid(){
+        Date now = new Date();
+        return now.getTime()<=expires.getTime();
     }
 }

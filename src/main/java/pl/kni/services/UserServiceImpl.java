@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.kni.exceptions.UserNotFoundException;
 import pl.kni.forms.UserCreateForm;
+import pl.kni.models.Registration;
 import pl.kni.models.User;
 import pl.kni.repositories.UserRepository;
 
@@ -44,6 +45,12 @@ public class UserServiceImpl implements UserService{
     @Override
     public User create(UserCreateForm userCreateForm) {
         User user = new User(userCreateForm);
+        return userRepository.save(user);
+    }
+
+    @Override
+    public User create(Registration registration) {
+        User user = new User(registration);
         return userRepository.save(user);
     }
 

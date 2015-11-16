@@ -1,6 +1,7 @@
 package pl.kni.validation;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import pl.kni.services.RegistrationService;
 import pl.kni.services.UserService;
 
 import javax.validation.ConstraintValidator;
@@ -14,6 +15,9 @@ public class AvailableValidator implements ConstraintValidator<Available,String>
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private RegistrationService registrationService;
+
     private Available.Field type;
 
     public void initialize(Available available) {
@@ -21,6 +25,6 @@ public class AvailableValidator implements ConstraintValidator<Available,String>
     }
 
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return userService.emailAvailable(s);
+        return userService.emailAvailable(s)&&registrationService.emailAvailable(s);
     }
 }
