@@ -29,12 +29,12 @@
 		
 		<main>
 			<div class="parallax-container">
-				<h1 class="center-align white-text marg-top-200 shadow-text"><b>Studenckie podziemie</b></h1>
+				<h1 class="center-align white-text marg-top-200 shadow-text"><b>Studenci PW</b></h1>
 				<div class="parallax">
 					<img th:src="@{/images/bg.jpg}"/>
 				</div>
 			</div>
-			<div th:include="__${content+' :: fragment'}__">
+			<div id="scroll" th:include="__${content+' :: fragment'}__">
 					
 				
 			</div>
@@ -64,8 +64,8 @@
 		  $(document).ready(function(){
 				$('html,body').niceScroll({cursorcolor:'#ffffff',cursorborder: '0 solid #000000',zindex:'5',cursoropacitymax: '0'});
 				$('.parallax').parallax();
-				var position = $('#content').offset().top;
-				//$('html,body').animate({"scrollTop": position + "px"},1000);
+				var position = $('#scroll').offset().top;
+				$('html,body').animate({"scrollTop": position + "px"},0);
 				$('select').material_select();
 			});
 		</script>	
