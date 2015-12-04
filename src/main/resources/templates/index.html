@@ -7,6 +7,119 @@
 		<link th:href="@{/css/styles.css}" type="text/css" rel="stylesheet" media="screen,projection"/>
 		<script th:src="@{/js/jquery-1.11.2.js}" type="text/javascript"></script>
 		<script th:src="@{/js/materialize.min.js}" type="text/javascript"></script>
+		<script>
+			function async(id) {
+				console.log(id);
+				$.get("/kni/admin/majors/list",{facultyId:id}, function (data) {
+					/*<![CDATA[*/
+					$("#majors").empty();
+					for (i = 0; i<data.length; i++){
+						var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+						$("#majors").append(option);
+					}
+					/*]]>*/
+				});
+			}
+			function pullMajors(id,view){
+				$.get("/kni/admin/majors/list",{facultyId:id}, function (data) {
+					/*<![CDATA[*/
+					view.empty();
+					for (i = 0; i<data.length; i++){
+						var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+						view.append(option);
+					}
+					/*]]>*/
+				});
+			}
+			function pullSubjects(id,view){
+				$.get("/kni/admin/subjects/list",{semesterId:id}, function (data) {
+					/*<![CDATA[*/
+					view.empty();
+					for (i = 0; i<data.length; i++){
+						var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+						view.append(option);
+					}
+					/*]]>*/
+				});
+			}
+			function pullSemesters(id,view){
+				console.log('pulling');
+				console.log(id);
+				$.get("/kni/admin/semesters/list",{majorId:id}, function (data) {
+					/*<![CDATA[*/
+					console.log(data);
+					view.empty();
+					for (i = 0; i<data.length; i++){
+						var option = $('<option></option>').attr("value", data[i].id).text(data[i].number);
+						view.append(option);
+					}
+					/*]]>*/
+					return data;
+				});
+			}
+			function doublePull(id,view1,view2){
+				$.get("/kni/admin/majors/list",{facultyId:id}, function (data) {
+					/*<![CDATA[*/
+					view1.empty();
+					view2.empty();
+					for (i = 0; i<data.length; i++){
+						var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+						view1.append(option);
+					}
+
+					if (data.length>0)
+						console.log(pullSemesters(data[0].id,view2));
+
+
+					/*]]>*/
+				});
+			}
+			function pullSemestersAndSubjects(id,view1,view2){
+				$.get("/kni/admin/semesters/list",{majorId:id}, function (data) {
+					/*<![CDATA[*/
+					view1.empty();
+					for (i = 0; i<data.length; i++){
+						var option = $('<option></option>').attr("value", data[i].id).text(data[i].number);
+						view1.append(option);
+					}
+
+					if (data.length>0)
+						pullSubjects(data[0].id,view2);
+
+
+					/*]]>*/
+				});
+			}
+			function triplePull(id,view1,view2,view3){
+
+				$.get("/kni/admin/majors/list",{facultyId:id}, function (data) {
+					/*<![CDATA[*/
+					view1.empty();
+					view2.empty();
+					view3.empty();
+					for (i = 0; i<data.length; i++){
+						var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+						view1.append(option);
+					}
+					if (data.length==0) return;
+					$.get("/kni/admin/semesters/list",{majorId:data[0].id}, function (data) {
+						for (i = 0; i<data.length; i++){
+							var option = $('<option></option>').attr("value", data[i].id).text(data[i].number);
+							view2.append(option);
+						}
+						if (data.length ==0 )return;
+
+						$.get("/kni/admin/subjects/list",{semesterId:data[0].id}, function (data) {
+							for (i = 0; i<data.length; i++){
+								var option = $('<option></option>').attr("value", data[i].id).text(data[i].name);
+								view3.append(option);
+							}
+						});
+					});
+					/*]]>*/
+				});
+			}
+		</script>
 	</head>
 	<body>
 		<header>

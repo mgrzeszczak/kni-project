@@ -1,0 +1,50 @@
+﻿<div th:fragment="fragment">
+<nav>
+						<div class="container nav-wrapper">
+							<a href="#" class="brand-logo">Panel administratora</a>
+							<ul class="right ">
+								<li><a th:href="@{/}">Strona główna</a></li>
+							</ul>
+						</div>
+					</nav>
+				
+				<div class="container">
+					<div class="section">
+					
+						<div class="row marg-top-20">
+						
+							<div class="col s8 offset-s2">
+							
+								<div class="row card-panel hoverable no-marg-top">
+
+									<div class="col s12">
+										<div class="row">
+											<ul class="tabs">
+												<li class="tab"><a href="#faculties">Wydziały</a></li>
+												<li class="tab"><a href="#majors">Kierunki</a></li>
+												<li class="tab"><a href="#semesters">Semestry</a></li>
+												<li class="tab"><a href="#subjects">Przedmioty</a></li>
+												<li class="tab"><a href="#teachers">Nauczyciele</a></li>
+											</ul>
+										</div>
+										
+										<div class="section">
+											<div id="faculties" class="col s12" th:include="admin-faculty::admin-faculty">
+											</div>
+											<div id="majors" class="col s12" th:include="admin-major::admin-major">
+
+											</div>
+											<div id="semesters" th:include="admin-semester::admin-semester">
+											</div>
+											<div id="subjects" th:include="admin-subject::admin-subject">
+											</div>
+											<div id="teachers" th:include="admin-teacher::admin-teacher">
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+</div>

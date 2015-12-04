@@ -1,0 +1,97 @@
+﻿<div th:fragment="admin-major" class="col s12">
+
+    <div class="container">
+        <div class="section">
+
+            <div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Dodaj kierunek</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/major/create}" method="post" th:object="${majorCreateForm}">
+                            
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="name" th:field="*{name}" type="text" name="name" required=""/>
+                                    <label for="name">Nazwa</label>
+                                    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="section center-align error-block"></div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select th:field="*{facultyId}" required="true">
+                                        <option id="createMajorFacultyId" th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
+                                    </select>
+                                    <label for="createMajorFacultyId">Wydział</label>
+                                </div>
+                            </div>
+
+                            <div th:if="${param.majorCreateOk}" class="section center-align success-block">Udało się dodać kierunek.</div>
+                            <div th:if="${param.majorCreateError}" class="section center-align error-block">Nie udało się dodać kierunku.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Dodaj</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+			
+			<div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Usuń kierunek</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/major/remove}" method="post">
+
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="facultyId" id="facultyId" required="" onchange="pullMajors(this.value,$('#majorDeleteMajors'))">
+                                        <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
+                                    </select>
+                                    <label for="facultyId">Wybierz wydział</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="id" id="majorDeleteMajors" required="true">
+                                        <option id="majDeleteMajorId" th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
+                                    </select>
+                                    <label for="majDeleteMajorId">Wybierz kierunek</label>
+                                </div>
+                            </div>
+                            <div th:if="${param.majorDeleteOk}" class="section center-align success-block">Kierunek usunięty pomyślnie.</div>
+                            <div th:if="${param.majorDeleteError}" class="section center-align success-block">Nie udało się usunąć kierunku.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Usuń</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+</div>

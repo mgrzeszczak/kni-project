@@ -110,6 +110,7 @@ public class SubjectController {
     @RequestMapping(value = "/{id}/note/upload",method = RequestMethod.POST)
     public String uploadNote(@RequestParam("file") MultipartFile file,
                              @PathVariable long id) throws MaxUploadSizeExceededException{
+        if (file==null) return "redirect:/error";
         if (file.isEmpty()) return "redirect:/subject/"+id+"?fileUploadError#files";
         try {
             noteService.create(file.getOriginalFilename(), id, file);

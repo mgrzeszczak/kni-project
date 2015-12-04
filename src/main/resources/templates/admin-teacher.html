@@ -1,0 +1,92 @@
+﻿<div th:fragment="admin-teacher" class="col s12">
+
+    <div class="container">
+        <div class="section">
+
+            <div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Dodaj nauczyciela</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/teacher/create}" method="post" th:object="${teacherCreateForm}">
+                            
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="firstName" th:field="*{firstName}" type="text" name="firstName" required=""/>
+                                    <label for="firstName">Imię</label>
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}" class="section center-align error-block"></div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="lastName" th:field="*{lastName}" type="text" name="lastName" required=""/>
+                                    <label for="lastName">Nazwisko</label>
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}" class="section center-align error-block"></div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="description" th:field="*{description}" type="text" name="description" required=""/>
+                                    <label for="description">Opis</label>
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="section center-align error-block"></div>
+
+                            <div th:if="${param.majorCreateOk}" class="section center-align success-block">Udało się dodać nauczyciela.</div>
+                            <div th:if="${param.majorCreateError}" class="section center-align error-block">Nie udało się dodać nauczyciela.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Dodaj</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+			
+			<div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Usuń nauczyciela</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/teacher/remove}" method="post">
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select required="true" name="id">
+                                        <option id="delTeacher" th:each="teacher : ${teachers}" th:value="${teacher.id}" th:text="${teacher.firstName+' '+teacher.lastName}"/>
+                                    </select>
+                                    <label for="delTeacher">Nauczyciel</label>
+                                </div>
+                            </div>
+                            <div th:if="${param.teacherRemoveOk}" class="section center-align success-block">Nauczyciel usunięty pomyślnie.</div>
+                            <div th:if="${param.teacherRemoveError}" class="section center-align success-block">Nie udało się usunąć nauczyciela.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Usuń</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+</div>

@@ -40,7 +40,7 @@ public class MajorServiceImpl implements MajorService{
         Major major = new Major();
         major.setFaculty(faculty);
         major.setName(majorCreateForm.getName());
-        major.setAbbrev(majorCreateForm.getName().toLowerCase().substring(0, 5));
+        major.setAbbrev("null");
         return majorRepository.save(major);
     }
 

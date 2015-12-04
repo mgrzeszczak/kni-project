@@ -51,6 +51,11 @@ public class AdminController {
     @Autowired
     private TeacherCreateFormValidator teacherCreateFormValidator;
 
+    @ModelAttribute("content")
+    public String content(){
+        return "new_admin";
+    }
+
     @ModelAttribute("faculties")
     public List<Faculty> getFaculties(){
         return facultyService.all();
@@ -81,7 +86,7 @@ public class AdminController {
                              MajorCreateForm majorCreateForm,
                              SubjectCreateForm subjectCreateForm,
                              TeacherCreateForm teacherCreateForm){
-        return "admin";
+        return "index";
     }
 
     @InitBinder(value = "facultyCreateForm")
@@ -108,10 +113,10 @@ public class AdminController {
                              SubjectCreateForm subjectCreateForm,
                              TeacherCreateForm teacherCreateForm){
         if (result.hasErrors()){
-            return "admin";
+            return "index";
         }
         facultyService.create(facultyCreateForm);
-        return "redirect:/admin?facultyCreated";
+        return "redirect:/admin?facultyCreated#faculties";
     }
 
     @RequestMapping(value = "/faculty/remove",method = RequestMethod.POST)
@@ -119,9 +124,9 @@ public class AdminController {
         try {
             facultyService.remove(id);
         } catch (FacultyNotFoundException e) {
-            return "redirect:/admin?facultyDeleteError";
+            return "redirect:/admin?facultyDeleteError#faculties";
         }
-        return "redirect:/admin?facultyDeleteOk";
+        return "redirect:/admin?facultyDeleteOk#faculties";
     }
 
     @RequestMapping(value = "/major/create",method = RequestMethod.POST)
@@ -131,15 +136,15 @@ public class AdminController {
                            SubjectCreateForm subjectCreateForm,
                            TeacherCreateForm teacherCreateForm){
         if (result.hasErrors()){
-            return "admin";
+            return "index";
         }
         try {
             majorService.create(majorCreateForm);
         } catch (FacultyNotFoundException e) {
             e.printStackTrace();
-            return "redirect:/admin?majorCreateError";
+            return "redirect:/admin?majorCreateError#majors";
         }
-        return "redirect:/admin?majorCreateOk";
+        return "redirect:/admin?majorCreateOk#majors";
     }
 
     @RequestMapping(value = "/major/remove",method = RequestMethod.POST)
@@ -147,9 +152,9 @@ public class AdminController {
         try {
             majorService.remove(id);
         } catch (MajorNotFoundException e) {
-            return "redirect:/admin?majorDeleteError";
+            return "redirect:/admin?majorDeleteError#majors";
         }
-        return "redirect:/admin?majorDeleteOk";
+        return "redirect:/admin?majorDeleteOk#majors";
     }
 
     @RequestMapping(value = "/semester/create",method = RequestMethod.POST)
@@ -157,15 +162,15 @@ public class AdminController {
         try {
             semesterService.create(majorId, amount);
         } catch (MajorNotFoundException e) {
-            return "redirect:/admin?semesterCreateError";
+            return "redirect:/admin?semesterCreateError#semesters";
         }
-        return "redirect:/admin?semesterCreateOk";
+        return "redirect:/admin?semesterCreateOk#semesters";
     }
 
     @RequestMapping(value = "/semester/remove",method = RequestMethod.POST)
     public String removeSemesters(@RequestParam List<Long> ids, @RequestParam long majorId){
         semesterService.remove(ids);
-        return "redirect:/admin?semesterRemoveOk";
+        return "redirect:/admin?semesterRemoveOk#semesters";
     }
 
     @RequestMapping(value = "/subject/create",method = RequestMethod.POST)
@@ -174,13 +179,13 @@ public class AdminController {
                                 FacultyCreateForm facultyCreateForm,
                                 MajorCreateForm majorCreateForm,
                                 TeacherCreateForm teacherCreateForm){
-        if (result.hasErrors()) return "admin";
+        if (result.hasErrors()) return "index";
         try {
             subjectService.create(subjectCreateForm);
         } catch (SemesterNotFoundException e) {
-            return "redirect:/admin?subjectCreateError";
+            return "redirect:/admin?subjectCreateError#subjects";
         }
-        return "redirect:/admin?subjectCreateOk";
+        return "redirect:/admin?subjectCreateOk#subjects";
     }
     @RequestMapping(value = "/subject/remove",method = RequestMethod.POST)
     public String removeSemesters(@RequestParam long id){
@@ -188,9 +193,9 @@ public class AdminController {
             subjectService.remove(id);
         } catch (SubjectNotFoundException e) {
             e.printStackTrace();
-            return "redirect:/admin?subjectRemoveError";
+            return "redirect:/admin?subjectRemoveError#subjects";
         }
-        return "redirect:/admin?subjectRemoveOk";
+        return "redirect:/admin?subjectRemoveOk#subjects";
     }
 
     @RequestMapping(value = "/teacher/create",method = RequestMethod.POST)
@@ -199,9 +204,9 @@ public class AdminController {
                                 FacultyCreateForm facultyCreateForm,
                                 MajorCreateForm majorCreateForm,
                                 SubjectCreateForm subjectCreateForm){
-        if (result.hasErrors()) return "admin";
+        if (result.hasErrors()) return "index";
         teacherService.create(teacherCreateForm);
-        return "redirect:/admin?teacherCreateOk";
+        return "redirect:/admin?teacherCreateOk#teachers";
     }
     @RequestMapping(value = "/teacher/remove",method = RequestMethod.POST)
     public String removeTeacher(@RequestParam long id){
@@ -209,9 +214,9 @@ public class AdminController {
             teacherService.remove(id);
         } catch (TeacherNotFoundException e) {
             e.printStackTrace();
-            return "redirect:/admin?teacherRemoveError";
+            return "redirect:/admin?teacherRemoveError#teachers";
         }
-        return "redirect:/admin?teacherRemoveOk";
+        return "redirect:/admin?teacherRemoveOk#teachers";
     }
 
 

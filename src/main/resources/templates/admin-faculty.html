@@ -1,0 +1,90 @@
+﻿<div th:fragment="admin-faculty" class="col s12">
+
+    <div class="container">
+        <div class="section">
+
+            <div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Dodaj wydział</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/faculty/create}" method="post" th:object="${facultyCreateForm}">
+                            
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="name" th:field="*{name}" type="text" name="title" required=""/>
+                                    <label for="name">Nazwa</label>
+                                    <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="section center-align error-block"></div>
+                                </div>
+
+                            </div>
+
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="abbrev" th:field="*{abbrev}" type="text" name="title" required=""/>
+                                    <label for="abbrev">Skrót</label>
+                                    <div th:if="${#fields.hasErrors('abbrev')}" th:errors="*{abbrev}" class="section center-align error-block"></div>
+                                </div>
+
+                            </div>
+
+
+                            <div th:if="${param.facultyCreated}" class="section center-align success-block">Udało się dodać wydział.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Dodaj</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+			
+			<div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Usuń wydział</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/faculty/remove}" method="post">
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="id" id="id"  required="">
+                                        <option th:value="${faculty.id}" th:each="faculty: ${faculties}" th:text="${faculty.name}">Nazwa wydziału</option>
+                                    </select>
+                                    <label for="id">Wybierz wydział</label>
+                                </div>
+                            </div>
+                            <div th:if="${param.facultyDeleteOk}" class="section center-align success-block">Wydział usunięty pomyślnie.</div>
+                            <div th:if="${param.facultyDeleteError}" class="section center-align error-block">Nie udało się usunąć wydziału.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Usuń</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,119 @@
+﻿<div th:fragment="admin-semester" class="col s12">
+
+    <div class="container">
+        <div class="section">
+
+            <div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Dodaj semestry</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/semester/create}" method="post">
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select required="true" id="facultyCreateSemesters" onchange="pullMajors(this.value,$('#semesterCreateMajors'))">
+                                        <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
+                                    </select>
+                                    <label for="facultyCreateSemesters">Wydział</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="majorId" id="semesterCreateMajors" required="true">
+                                        <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
+                                    </select>
+                                    <label for="semesterCreateMajors">Kierunek</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select id="amount" name="amount" required="true">
+                                        <option value="1" th:text="1"/>
+                                        <option value="2" th:text="2"/>
+                                        <option value="3" th:text="3"/>
+                                        <option value="4" th:text="4"/>
+                                        <option value="5" th:text="5"/>
+                                        <option value="6" th:text="6"/>
+                                        <option value="7" th:text="7"/>
+                                    </select>
+                                    <label for="amount">Ilość</label>
+                                </div>
+                            </div>
+
+                            <div th:if="${param.semesterCreateOk}" class="section center-align success-block">Udało się dodać semestry.</div>
+                            <div th:if="${param.semesterCreateError}" class="section center-align error-block">Nie udało się dodać semestrów.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Dodaj</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+			
+			<div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Usuń semestry</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/semester/remove}" method="post">
+
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select required="true" id="semDeleteFac" onchange="doublePull(this.value, $('#semesterDeleteMajors'),$('#semesterDeleteSemesters'));">
+                                        <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
+                                    </select>
+                                    <label for="semDeleteFac">Wybierz wydział</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select id="semesterDeleteMajors" name="majorId" required="true" onchange="pullSemesters(this.value,$('#semesterDeleteSemesters'))">
+                                        <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
+                                    </select>
+                                    <label for="semesterDeleteMajors">Wybierz kierunek</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select  required="true" id="semesterDeleteSemesters">
+                                        <option th:each="semester : ${semesters}" th:value="${semester.id}" th:text="${semester.number}"/>
+                                    </select>
+                                    <label for="semesterDeleteSemesters">Wybierz semestr</label>
+                                </div>
+                            </div>
+                            <div th:if="${param.semesterRemoveOk}" class="section center-align success-block">Semestry usunięte pomyślnie.</div>
+                            <div th:if="${param.semesterRemoveError}" class="section center-align success-block">Nie udało się usunąć semestrów.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Usuń</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+</div>

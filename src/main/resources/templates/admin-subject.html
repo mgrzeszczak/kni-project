@@ -1,0 +1,141 @@
+﻿<div th:fragment="admin-subject" class="col s12">
+
+    <div class="container">
+        <div class="section">
+
+            <div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Dodaj przedmiot</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/subject/create}" method="post" th:object="${subjectCreateForm}">
+
+
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select required="true" id="subCreateFaculties" onchange="doublePull(this.value, $('#subjectCreateMajors'),$('#subjectCreateSemesters'));">
+                                        <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
+                                    </select>
+                                    <label for="subCreateFaculties">Wydział</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select id="subjectCreateMajors" required="true" onchange="pullSemesters(this.value,$('#subjectCreateSemesters'))">
+                                        <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
+                                    </select>
+                                    <label for="subjectCreateMajors">Kierunek</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select th:field="*{semesterId}" required="true" id="subjectCreateSemesters">
+                                        <option th:each="semester : ${semesters}" th:value="${semester.id}" th:text="${semester.number}"/>
+                                    </select>
+                                    <label for="subjectCreateSemesters">Semestr</label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="newSubjectName" type="text" th:field="*{name}" required="true"/>
+                                    <label for="newSubjectName">Nazwa</label>
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="section center-align error-block"></div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <input id="newSubjectDescription" type="text" th:field="*{description}" required="true"/>
+                                    <label for="newSubjectDescription">Opis</label>
+                                </div>
+                            </div>
+                            <div th:if="${#fields.hasErrors('description')}" th:errors="*{description}" class="section center-align error-block"></div>
+
+
+
+                            <div th:if="${param.subjectCreateOk}" class="section center-align success-block">Udało się dodać przedmiot.</div>
+                            <div th:if="${param.subjectCreateError}" class="section center-align error-block">Nie udało się dodać przedmiotu.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Dodaj</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+			
+			<div class="row marg-top-20">
+
+                <div class="col s12">
+
+                    <div  class="row no-marg-bottom">
+                        <nav>
+                            <div class="nav-wrapper">
+                                <a class="brand-logo center">Usuń przedmiot</a>
+                            </div>
+                        </nav>
+                    </div>
+                    <div class="row card-panel hoverable no-marg-top">
+                        <form  class="col s12" th:action="@{/admin/subject/remove}" method="post">
+
+
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select id="subjectDeleteFaculties" required="true" onchange="triplePull(this.value, $('#subjectDeleteMajors'),$('#subjectDeleteSemesters'),$('#subjectDeleteSubjects'));">
+                                        <option th:each="faculty : ${faculties}" th:value="${faculty.id}" th:text="${faculty.name}"/>
+                                    </select>
+                                    <label for="subjectDeleteFaculties">Wydział</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select id="subjectDeleteMajors" required="true" onchange="pullSemestersAndSubjects(this.value,$('#subjectDeleteSemesters'),$('#subjectDeleteSubjects'))">
+                                        <option th:each="major : ${majors}" th:value="${major.id}" th:text="${major.name}"/>
+                                    </select>
+                                    <label for="subjectDeleteMajors">Kierunek</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select required="true" id="subjectDeleteSemesters" onchange="pullSubjects(this.value, $('#subjectDeleteSubjects'));">
+                                        <option th:each="semester : ${semesters}" th:value="${semester.id}" th:text="${semester.number}"/>
+                                    </select>
+                                    <label for="subjectDeleteSemesters">Semestr</label>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="input-field col s12">
+                                    <select name="id" required="true" id="subjectDeleteSubjects">
+                                        <option th:each="subject : ${subjects}" th:value="${subject.id}" th:text="${subject.name}"/>
+                                    </select>
+                                    <label for="subjectDeleteSubjects">Przedmiot</label>
+                                </div>
+                            </div>
+
+                            <div th:if="${param.subjectRemoveOk}" class="section center-align success-block">Przedmiot usunięty pomyślnie.</div>
+                            <div th:if="${param.subjectRemoveError}" class="section center-align success-block">Nie udało się usunąć przedmiotu.</div>
+                            <div class="row center">
+                                <button type="submit" class="waves-effect waves-light btn">Usuń</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+
+
+
+
+        </div>
+    </div>
+
+</div>
